@@ -35,9 +35,7 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
     socket.on("drawing", (image) => {
 
-
         var data = image.replace(/^data:image\/\w+;base64,/, "");
-
         var buf = Buffer.from(data, 'base64')
 
         fs.writeFile("views/canvas.png", buf, function(err, result) {
