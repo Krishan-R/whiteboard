@@ -10,7 +10,7 @@ sys = require('sys');
 
 fs.unlink('views/canvas.png', (err => {
     if (err) {
-        console.error(error);
+        console.error(err);
         return;
     }
 }))
@@ -43,26 +43,16 @@ io.on('connection', (socket) => {
         } )
 
     });
+
+    socket.on("someoneDrawing", (data) => {
+        socket.broadcast.emit("someoneDrawing", data);
+    })
+
+    socket.on("stoppedDrawing", (data) => {
+        socket.broadcast.emit("stoppedDrawing", data);
+    })
+
+
 });
-
-
-
-
-// var app = require('express')();
-// var http = require('http').createServer(app);
-// var io = require('socket.io')(http);
-//
-// app.get('/', (req, res) => {
-//     res.sendFile(__dirname + '/views/index.html');
-// });
-//
-// io.on('connection', (socket) => {
-//    console.log("a user has connected");
-// });
-//
-// http.listen(8000, () => {
-//     console.log("listening on *:8000");
-// })
-
 
 
