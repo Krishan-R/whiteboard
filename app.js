@@ -1,10 +1,20 @@
 var express = require('express');
 var path = require('path');
 
-
 var app = express();
 var server = app.listen(process.env.PORT || 8000);
 var io = require('socket.io').listen(server);
+
+fs = require('fs');
+sys = require('sys');
+
+fs.unlink('views/canvas.png', (err => {
+    if (err) {
+        console.error(error);
+        return;
+    }
+}))
+console.log("Deleting previous sessions canvas");
 
 console.log("listening on *:8000");
 
@@ -25,8 +35,6 @@ io.on('connection', (socket) => {
 io.on('connection', (socket) => {
     socket.on("drawing", (image) => {
 
-        fs = require('fs');
-        sys = require('sys');
 
         var data = image.replace(/^data:image\/\w+;base64,/, "");
 

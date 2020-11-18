@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="e15b2cba-1cb7-45a4-9be7-f8ae2308d964" name="Default Changelist" comment="" />
+    <list default="true" id="e15b2cba-1cb7-45a4-9be7-f8ae2308d964" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/canvas.png" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +38,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1kSgq4TbEfVZs41rpkODEaqYsrX" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -26,7 +52,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="12.18.1" />
     <property name="javascript.nodejs.core.library.typings.version" value="12.19.5" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Downloads/Real-Time-Multi-User-Drawing-Tool-master" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
@@ -58,6 +84,7 @@
       <updated>1605699593410</updated>
       <workItem from="1605699594763" duration="10623000" />
       <workItem from="1605728389914" duration="7836000" />
+      <workItem from="1605736590518" duration="395000" />
     </task>
     <servers />
   </component>
@@ -67,30 +94,41 @@
   <component name="UnknownFeatures">
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.php" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="WindowStateProjectService">
     <state x="1060" y="455" key="FileChooserDialogImpl" timestamp="1605730406217">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605730406217" />
-    <state width="2539" height="323" key="GridCell.Tab.0.bottom" timestamp="1605736364756">
+    <state width="2539" height="327" key="GridCell.Tab.0.bottom" timestamp="1605736966763">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="323" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736364756" />
+    <state width="2539" height="327" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736966763" />
     <state width="2539" height="492" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@2560.167.1920.1040" timestamp="1605713960681" />
-    <state width="2539" height="323" key="GridCell.Tab.0.center" timestamp="1605736364755">
+    <state width="2539" height="327" key="GridCell.Tab.0.center" timestamp="1605736966763">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="323" key="GridCell.Tab.0.center/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736364755" />
+    <state width="2539" height="327" key="GridCell.Tab.0.center/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736966763" />
     <state width="2539" height="492" key="GridCell.Tab.0.center/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@2560.167.1920.1040" timestamp="1605713960681" />
-    <state width="2539" height="323" key="GridCell.Tab.0.left" timestamp="1605736364755">
+    <state width="2539" height="327" key="GridCell.Tab.0.left" timestamp="1605736966762">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="323" key="GridCell.Tab.0.left/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736364755" />
+    <state width="2539" height="327" key="GridCell.Tab.0.left/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736966762" />
     <state width="2539" height="492" key="GridCell.Tab.0.left/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@2560.167.1920.1040" timestamp="1605713960681" />
-    <state width="2539" height="323" key="GridCell.Tab.0.right" timestamp="1605736364756">
+    <state width="2539" height="327" key="GridCell.Tab.0.right" timestamp="1605736966763">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="323" key="GridCell.Tab.0.right/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736364756" />
+    <state width="2539" height="327" key="GridCell.Tab.0.right/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@0.0.2560.1400" timestamp="1605736966763" />
     <state width="2539" height="492" key="GridCell.Tab.0.right/0.0.2560.1400/-1096.-768.1366.728/-1080.0.1080.1880/2560.167.1920.1040@2560.167.1920.1040" timestamp="1605713960681" />
     <state width="2539" height="492" key="GridCell.Tab.1.bottom" timestamp="1605713960681">
       <screen x="2560" y="167" width="1920" height="1040" />
