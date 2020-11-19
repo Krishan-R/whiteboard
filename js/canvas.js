@@ -127,6 +127,10 @@ weightSelector.onchange = function () {
     lineWidth = weightSelector.value;
 }
 
+socket.on('disconnect', function () {
+    alert("connection lost");
+})
+
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);
