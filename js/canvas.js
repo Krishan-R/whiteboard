@@ -35,25 +35,28 @@ var drawing = function(event) {
 
 
     if (ink) {
-        socket.emit("someoneDrawing", {x: mouseX, y: mouseY});
 
         canvasContext.lineTo(mouseX, mouseY);
         canvasContext.strokeStyle = "#ffdf06";
         canvasContext.lineWidth = 5;
         canvasContext.stroke();
+
+        socket.emit("someoneDrawing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+
     }
 }
 
 socket.on("someoneDrawing", function(data) {
     canvasContext.lineTo(data.x, data.y);
-    canvasContext.strokeStyle = "#ffdf06";
-    canvasContext.lineWidth = 5;
+    canvasContext.strokeStyle = data.strokeStyle;
+    canvasContext.lineWidth = data.lineW;
     canvasContext.stroke();
+
 })
 
 socket.on("stoppedDrawing", function() {
     canvasContext.beginPath();
-})
+    })
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);
