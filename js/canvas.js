@@ -2,7 +2,11 @@
 var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
 var canvasContext = canvas.getContext("2d");
+
 var ink = false;
+var erase = false;
+
+var lineWidth = 5
 
 var socket = io();
 
@@ -14,7 +18,8 @@ img.onload = function () {
 };
 
 var start = function(event) {
-    ink = true
+    ink = false;
+    erase = true
     rect = canvas.getBoundingClientRect();
     drawing(event);
 }
@@ -22,6 +27,7 @@ var start = function(event) {
 var stop = function(event) {
     socket.emit("stoppedDrawing");
     ink = false;
+    erase = false
     canvasContext.beginPath();
 
     // send canvas data to be saved
@@ -38,10 +44,24 @@ var drawing = function(event) {
 
         canvasContext.lineTo(mouseX, mouseY);
         canvasContext.strokeStyle = "#ffdf06";
-        canvasContext.lineWidth = 5;
+        canvasContext.lineWidth = lineWidth;
         canvasContext.stroke();
 
         socket.emit("someoneDrawing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+
+    } else if (erase) {
+
+        canvasContext.globalCompositeOperation = "destination-out";
+        // canvasContext.arc(mouseX, mouseY, 2, 0, Math.PI*2, false);
+        // canvasContext.fill();
+
+        canvasContext.lineTo(mouseX, mouseY);
+        canvasContext.lineWidth = lineWidth;
+        canvasContext.stroke();
+
+        socket.emit("someoneErasing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+
+        canvasContext.globalCompositeOperation = "source-over";
 
     }
 }
@@ -49,7 +69,7 @@ var drawing = function(event) {
 socket.on("someoneDrawing", function(data) {
     canvasContext.lineTo(data.x, data.y);
     canvasContext.strokeStyle = data.strokeStyle;
-    canvasContext.lineWidth = data.lineW;
+    canvasContext.lineWidth = data.lineWidth;
     canvasContext.stroke();
 
 })
@@ -57,6 +77,18 @@ socket.on("someoneDrawing", function(data) {
 socket.on("stoppedDrawing", function() {
     canvasContext.beginPath();
     })
+
+socket.on("someoneErasing", function(data) {
+    canvasContext.globalCompositeOperation = "destination-out";
+
+    canvasContext.lineTo(data.x, data.y);
+    canvasContext.strokeStyle = data.strokeStyle;
+    canvasContext.lineWidth = data.lineWidth;
+    canvasContext.stroke();
+
+    canvasContext.globalCompositeOperation = "source-over";
+
+})
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);

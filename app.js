@@ -52,6 +52,10 @@ io.on('connection', (socket) => {
         socket.broadcast.emit("stoppedDrawing", data);
     })
 
+    socket.on("someoneErasing", (data) => {
+        socket.broadcast.emit("someoneErasing", data);
+    })
+
 
 });
 
