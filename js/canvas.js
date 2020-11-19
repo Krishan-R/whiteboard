@@ -1,4 +1,12 @@
 
+var eraseButton = document.getElementById("eraseButton");
+var blackButton = document.getElementById("blackButton");
+var blueButton = document.getElementById("blueButton");
+var pinkButton = document.getElementById("pinkButton");
+var redButton = document.getElementById("redButton");
+var yellowButton = document.getElementById("yellowButton");
+var greenButton = document.getElementById("greenButton");
+
 var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
 var canvasContext = canvas.getContext("2d");
@@ -18,8 +26,7 @@ img.onload = function () {
 };
 
 var start = function(event) {
-    ink = false;
-    erase = true
+    ink = true;
     rect = canvas.getBoundingClientRect();
     drawing(event);
 }
@@ -27,7 +34,6 @@ var start = function(event) {
 var stop = function(event) {
     socket.emit("stoppedDrawing");
     ink = false;
-    erase = false
     canvasContext.beginPath();
 
     // send canvas data to be saved
@@ -36,34 +42,36 @@ var stop = function(event) {
 }
 
 var drawing = function(event) {
+
+    console.log("drawing");
+
     mouseX = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
     mouseY = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
 
-
     if (ink) {
+        if (erase) {
 
-        canvasContext.lineTo(mouseX, mouseY);
-        canvasContext.strokeStyle = "#ffdf06";
-        canvasContext.lineWidth = lineWidth;
-        canvasContext.stroke();
+            canvasContext.globalCompositeOperation = "destination-out";
 
-        socket.emit("someoneDrawing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+            canvasContext.lineTo(mouseX, mouseY);
+            canvasContext.lineWidth = lineWidth;
+            canvasContext.stroke();
 
-    } else if (erase) {
+            socket.emit("someoneErasing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
 
-        canvasContext.globalCompositeOperation = "destination-out";
-        // canvasContext.arc(mouseX, mouseY, 2, 0, Math.PI*2, false);
-        // canvasContext.fill();
+            canvasContext.globalCompositeOperation = "source-over";
 
-        canvasContext.lineTo(mouseX, mouseY);
-        canvasContext.lineWidth = lineWidth;
-        canvasContext.stroke();
+        } else {
 
-        socket.emit("someoneErasing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+            canvasContext.lineTo(mouseX, mouseY);
+            canvasContext.lineWidth = lineWidth;
+            canvasContext.stroke();
 
-        canvasContext.globalCompositeOperation = "source-over";
+            socket.emit("someoneDrawing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
 
+        }
     }
+
 }
 
 socket.on("someoneDrawing", function(data) {
@@ -89,6 +97,42 @@ socket.on("someoneErasing", function(data) {
     canvasContext.globalCompositeOperation = "source-over";
 
 })
+
+eraseButton.onclick = function () {
+    console.log("erase button clicked");
+    erase = true;
+}
+blackButton.onclick = function () {
+    console.log("black button clicked");
+    erase = false;
+    canvasContext.strokeStyle = "#000000";
+}
+blueButton.onclick = function () {
+    console.log("blue button clicked");
+    erase = false;
+    canvasContext.strokeStyle = "#0000FF";
+}
+pinkButton.onclick = function () {
+    console.log("pink button clicked");
+    erase = false;
+    canvasContext.strokeStyle = "#FF1493";
+}
+redButton.onclick = function () {
+    console.log("red button clicked");
+    erase = false;
+    canvasContext.strokeStyle = "#FF0000";
+}
+yellowButton.onclick = function () {
+    console.log("yellow button clicked");
+    erase = false;
+    canvasContext.strokeStyle = "#FFFF00";
+}
+greenButton.onclick = function () {
+    console.log("green button clicked");
+    erase = false;
+    canvasContext.strokeStyle = "#008000";
+}
+
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);

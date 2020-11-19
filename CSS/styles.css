@@ -1,0 +1,22 @@
+
+h1 {
+    color: pink;
+}
+
+#colourPicker {
+    width: 700px;
+    /*background-color: red;*/
+    display: flex;
+    /*flex-grow: 1;*/
+    align-items: stretch;
+    padding-bottom: 10px;
+
+}
+
+.colourButton {
+    /*background-color: blue;*/
+    flex-grow: 1;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 20px;
+}

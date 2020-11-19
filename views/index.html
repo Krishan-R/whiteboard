@@ -4,10 +4,22 @@
     <meta charset="UTF-8">
     <title>Whiteboard</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="CSS/styles.css">
+
 </head>
 <body>
 
     <h1>Web Development Sucks</h1>
+
+    <div id="colourPicker" >
+        <button class="colourButton" id="eraseButton" style="background-color: white"></button>
+        <button class="colourButton" id="blackButton" style="background-color: #000000"></button>
+        <button class="colourButton" id="blueButton" style="background-color: #0000ff"></button>
+        <button class="colourButton" id="pinkButton" style="background-color: #ff1493"></button>
+        <button class="colourButton" id="redButton" style="background-color: #ff0000"></button>
+        <button class="colourButton" id="yellowButton" style="background-color: #ffff00"></button>
+        <button class="colourButton" id="greenButton" style="background-color: #008000"></button>
+    </div>
 
     <canvas id="myCanvas" width="700" height="480" style="border:1px solid black"></canvas>
 
