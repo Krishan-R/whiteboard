@@ -6,6 +6,7 @@ var pinkButton = document.getElementById("pinkButton");
 var redButton = document.getElementById("redButton");
 var yellowButton = document.getElementById("yellowButton");
 var greenButton = document.getElementById("greenButton");
+var weightSelector = document.getElementById('weightSelector');
 
 var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
@@ -14,7 +15,7 @@ var canvasContext = canvas.getContext("2d");
 var ink = false;
 var erase = false;
 
-var lineWidth = 5
+var lineWidth = weightSelector.value;
 
 var socket = io();
 
@@ -23,7 +24,7 @@ var img = new Image();
 img.src = 'views/canvas.png';
 img.onload = function () {
     canvasContext.drawImage(img, 0, 0);
-};
+}
 
 var start = function(event) {
     ink = true;
@@ -42,8 +43,6 @@ var stop = function(event) {
 }
 
 var drawing = function(event) {
-
-    console.log("drawing");
 
     mouseX = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
     mouseY = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
@@ -71,7 +70,6 @@ var drawing = function(event) {
 
         }
     }
-
 }
 
 socket.on("someoneDrawing", function(data) {
@@ -99,38 +97,34 @@ socket.on("someoneErasing", function(data) {
 })
 
 eraseButton.onclick = function () {
-    console.log("erase button clicked");
     erase = true;
 }
 blackButton.onclick = function () {
-    console.log("black button clicked");
     erase = false;
     canvasContext.strokeStyle = "#000000";
 }
 blueButton.onclick = function () {
-    console.log("blue button clicked");
     erase = false;
     canvasContext.strokeStyle = "#0000FF";
 }
 pinkButton.onclick = function () {
-    console.log("pink button clicked");
     erase = false;
     canvasContext.strokeStyle = "#FF1493";
 }
 redButton.onclick = function () {
-    console.log("red button clicked");
     erase = false;
     canvasContext.strokeStyle = "#FF0000";
 }
 yellowButton.onclick = function () {
-    console.log("yellow button clicked");
     erase = false;
     canvasContext.strokeStyle = "#FFFF00";
 }
 greenButton.onclick = function () {
-    console.log("green button clicked");
     erase = false;
     canvasContext.strokeStyle = "#008000";
+}
+weightSelector.onchange = function () {
+    lineWidth = weightSelector.value;
 }
 
 
