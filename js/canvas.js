@@ -62,7 +62,7 @@ function updateUserList(users) {
         li.setAttribute("id", ("listElement"+i))
 
         var additionalText = ""
-        
+
         if (i == 0) {
             additionalText += " (Leader)"
         }
@@ -77,6 +77,15 @@ function updateUserList(users) {
         connectedUserList.appendChild(li)
     }
 }
+
+socket.on("leaderDisconnected", function() {
+
+    if (authenticated) {
+        alert("Leader Disconnected")
+    }
+
+})
+
 
 // load canvas from storage
 var img = new Image();

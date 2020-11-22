@@ -34,10 +34,16 @@ io.on('connection', (socket) => {
 
         console.log(socket.username, "has disconnected");
 
+        if (socket.username == users[0]) {
+            console.log("user", socket.username, " was the leader")
+            socket.broadcast.emit("leaderDisconnected");
+        }
+
         if (users.includes(socket.username)) {
             users.splice(users.indexOf(socket.username), 1);
         }
 
+        socket.broadcast.emit("userChanged", users);
         console.log("current logged in users:", users);
 
     })
@@ -62,9 +68,16 @@ io.on('connection', (socket) => {
 
     socket.on("userLoggedOut", () => {
         console.log(socket.username, "logged out")
+
+        if (socket.username == users[0]) {
+            console.log("user", socket.username, " was the leader")
+            socket.broadcast.emit("leaderDisconnected");
+        }
+
         if (users.includes(socket.username)) {
             users.splice(users.indexOf(socket.username), 1);
         }
+
         socket.broadcast.emit("userChanged", users);
 
         console.log("current logged in users:", users);
