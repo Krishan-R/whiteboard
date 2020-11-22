@@ -60,11 +60,20 @@ function updateUserList(users) {
 
         var li = document.createElement("li");
         li.setAttribute("id", ("listElement"+i))
-        if (users[i] == usernameTextbox.value) {
-            li.appendChild(document.createTextNode(users[i] + " (You)"))
-        } else {
-            li.appendChild(document.createTextNode(users[i]))
+
+        var additionalText = ""
+        
+        if (i == 0) {
+            additionalText += " (Leader)"
         }
+
+        if (users[i] == usernameTextbox.value) {
+            additionalText += " (You)"
+        }
+
+        li.appendChild(document.createTextNode(users[i] + additionalText))
+
+
         connectedUserList.appendChild(li)
     }
 }
