@@ -1,4 +1,6 @@
 
+var login = true;
+
 var clearCanvasButton = document.getElementById("clearCanvas");
 var eraseButton = document.getElementById("eraseButton");
 var blackButton = document.getElementById("blackButton");
@@ -87,7 +89,7 @@ socket.on("stoppedDrawing", function() {
     })
 
 socket.on("someoneErasing", function(data) {
-    
+
     canvasContext.globalCompositeOperation = "destination-out";
 
     canvasContext.lineTo(data.x, data.y);
@@ -142,6 +144,21 @@ weightSelector.onchange = function () {
 socket.on('disconnect', function () {
     alert("connection lost");
 })
+
+var whiteboard = document.getElementById("whiteboard");
+var testButton = document.getElementById("testButton");
+
+testButton.onclick = function () {
+    console.log("button pressed")
+    login = !login;
+
+    if (login) {
+        whiteboard.style.display = "none";
+    } else {
+        whiteboard.style.display = "block";
+    }
+
+}
 
 
 canvas.addEventListener("mousedown", start);

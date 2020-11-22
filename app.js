@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
 
     socket.on("clearCanvas", () => {
 
-
         fs.unlink('views/canvas.png', (err => {
             if (err) {
                 console.error(err);
