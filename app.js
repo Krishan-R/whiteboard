@@ -55,7 +55,8 @@ io.on('connection', (socket) => {
             socket.username = username;
             console.log("current user is", username);
             console.log("current logged in users:", users);
-            socket.emit("usernameOK")
+            socket.emit("usernameOK", users)
+            socket.broadcast.emit("userChanged", users);
         }
     })
 
@@ -64,6 +65,8 @@ io.on('connection', (socket) => {
         if (users.includes(socket.username)) {
             users.splice(users.indexOf(socket.username), 1);
         }
+        socket.broadcast.emit("userChanged", users);
+
         console.log("current logged in users:", users);
 
     })

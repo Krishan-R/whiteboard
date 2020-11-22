@@ -17,6 +17,7 @@ var redButton = document.getElementById("redButton");
 var yellowButton = document.getElementById("yellowButton");
 var greenButton = document.getElementById("greenButton");
 var weightSelector = document.getElementById('weightSelector');
+var connectedUserList = document.getElementById("connectedUsersList")
 
 var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
@@ -29,7 +30,6 @@ var lineWidth = weightSelector.value;
 var socket = io();
 whiteboard.style.display = "none";
 
-
 loginButton.onclick = function () {
     socket.emit("usernameEntered", usernameTextbox.value)
 }
@@ -39,11 +39,43 @@ socket.on("usernameExists", function() {
     usernameError.style.display = "inline";
 })
 
-socket.on("usernameOK", function () {
-    console.log(usernameTextbox.value);
+socket.on("usernameOK", function (users) {
     authenticated = true;
     whiteboard.style.display = "block";
     login.style.display = "none"
+
+    connectedUserList.innerHTML = "";
+
+    for (let i = 0; i < users.length; i++) {
+
+        var li = document.createElement("li");
+        li.setAttribute("id", ("listElement"+i))
+
+        if (users[i] == usernameTextbox.value) {
+            li.appendChild(document.createTextNode(users[i] + " (You)"))
+        } else {
+            li.appendChild(document.createTextNode(users[i]))
+        }
+        connectedUserList.appendChild(li)
+    }
+})
+
+socket.on("userChanged", function(users) {
+
+    connectedUserList.innerHTML = "";
+
+    for (let i = 0; i < users.length; i++) {
+        console.log(users[i]);
+
+        var li = document.createElement("li");
+        li.setAttribute("id", ("listElement"+i))
+        if (users[i] == usernameTextbox.value) {
+            li.appendChild(document.createTextNode(users[i] + " (You)"))
+        } else {
+            li.appendChild(document.createTextNode(users[i]))
+        }
+        connectedUserList.appendChild(li)
+    }
 })
 
 // load canvas from storage
