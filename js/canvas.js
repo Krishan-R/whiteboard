@@ -3,9 +3,10 @@ var authenticated = false;
 
 var login = document.getElementById("login");
 var whiteboard = document.getElementById("whiteboard");
-var testButton = document.getElementById("testButton");
-
-whiteboard.style.display = "none";
+var logoutButton = document.getElementById("logoutButton");
+var loginButton = document.getElementById("loginButton")
+var usernameTextbox = document.getElementById("usernameTextbox")
+var usernameError = document.getElementById("usernameError")
 
 var clearCanvasButton = document.getElementById("clearCanvas");
 var eraseButton = document.getElementById("eraseButton");
@@ -23,10 +24,27 @@ var canvasContext = canvas.getContext("2d");
 
 var ink = false;
 var erase = false;
-
 var lineWidth = weightSelector.value;
 
 var socket = io();
+whiteboard.style.display = "none";
+
+
+loginButton.onclick = function () {
+    socket.emit("usernameEntered", usernameTextbox.value)
+}
+
+socket.on("usernameExists", function() {
+    console.log("username exists");
+    usernameError.style.display = "inline";
+})
+
+socket.on("usernameOK", function () {
+    console.log(usernameTextbox.value);
+    authenticated = true;
+    whiteboard.style.display = "block";
+    login.style.display = "none"
+})
 
 // load canvas from storage
 var img = new Image();
@@ -151,8 +169,7 @@ socket.on('disconnect', function () {
     alert("connection lost");
 })
 
-testButton.onclick = function () {
-    console.log("button pressed")
+logoutButton.onclick = function () {
     authenticated = !authenticated;
 
     if (authenticated) {
@@ -161,11 +178,11 @@ testButton.onclick = function () {
     } else {
         whiteboard.style.display = "none";
         login.style.display = "block"
-
     }
 
-}
+    socket.emit("userLoggedOut");
 
+}
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);

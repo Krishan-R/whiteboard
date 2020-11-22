@@ -14,15 +14,15 @@
     <div id="login">
 
         <h2 style="text-decoration: underline">Enter username for access to whiteboard</h2>
-        <form>
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username"><br><br>
-            <input type="submit" value="Submit">
-        </form>
+        <label>Username:</label><br>
+        <input type="text" id="usernameTextbox" name="username">
+        <p1 style="color: red; display: none" id="usernameError">username already exists</p1>
+        <br><br>
+        <button id="loginButton">Submit</button>
 
     </div>
 
-    <div id="whiteboard">
+    <div id="whiteboard" style="display: none">
         <div id="colourPicker">
             <button id="clearCanvas">clear</button>
             <button class="colourButton" id="eraseButton" style="background-color: white"></button>
@@ -67,10 +67,8 @@
 
             </div>
         </div>
+        <button id="logoutButton">log out</button>
     </div>
-
-    <button id="testButton">test</button>
-
 
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/canvas.js"></script>

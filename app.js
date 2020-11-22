@@ -5,9 +5,12 @@ var app = express();
 var server = app.listen(process.env.PORT || 8000);
 var io = require('socket.io').listen(server);
 
+var users = new Array();
+
 fs = require('fs');
 sys = require('sys');
 
+//// remove previous canvas on startup
 // fs.unlink('views/canvas.png', (err => {
 //     if (err) {
 //         console.error(err);
@@ -28,11 +31,43 @@ io.on('connection', (socket) => {
     console.log("a user connected");
 
     socket.on('disconnect', () => {
-        console.log("a user has disconnected");
+
+        console.log(socket.username, "has disconnected");
+
+        if (users.includes(socket.username)) {
+            users.splice(users.indexOf(socket.username), 1);
+        }
+
+        console.log("current logged in users:", users);
+
     })
 })
 
 io.on('connection', (socket) => {
+
+    socket.on("usernameEntered", (username) => {
+
+        if (users.includes(username)) {
+            console.log(username, "already exists");
+            socket.emit("usernameExists")
+        } else {
+            users.push(username);
+            socket.username = username;
+            console.log("current user is", username);
+            console.log("current logged in users:", users);
+            socket.emit("usernameOK")
+        }
+    })
+
+    socket.on("userLoggedOut", () => {
+        console.log(socket.username, "logged out")
+        if (users.includes(socket.username)) {
+            users.splice(users.indexOf(socket.username), 1);
+        }
+        console.log("current logged in users:", users);
+
+    })
+
     socket.on("drawing", (image) => {
 
         var data = image.replace(/^data:image\/\w+;base64,/, "");
