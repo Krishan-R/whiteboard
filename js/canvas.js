@@ -1,4 +1,5 @@
 
+var clearCanvasButton = document.getElementById("clearCanvas");
 var eraseButton = document.getElementById("eraseButton");
 var blackButton = document.getElementById("blackButton");
 var blueButton = document.getElementById("blueButton");
@@ -73,6 +74,7 @@ var drawing = function(event) {
 }
 
 socket.on("someoneDrawing", function(data) {
+
     canvasContext.lineTo(data.x, data.y);
     canvasContext.strokeStyle = data.strokeStyle;
     canvasContext.lineWidth = data.lineWidth;
@@ -85,6 +87,7 @@ socket.on("stoppedDrawing", function() {
     })
 
 socket.on("someoneErasing", function(data) {
+    
     canvasContext.globalCompositeOperation = "destination-out";
 
     canvasContext.lineTo(data.x, data.y);
@@ -96,6 +99,15 @@ socket.on("someoneErasing", function(data) {
 
 })
 
+socket.on("clearCanvas", function() {
+    console.log("help");
+    canvasContext.clearRect(0,0, canvas.width, canvas.height);
+})
+
+clearCanvasButton.onclick = function () {
+    socket.emit("clearCanvas");
+    canvasContext.clearRect(0,0, canvas.width, canvas.height);
+}
 eraseButton.onclick = function () {
     erase = true;
 }

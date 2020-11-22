@@ -20,8 +20,8 @@ console.log("listening on *:8000");
 
 app.use(express.static(path.join(__dirname)));
 
-app.get('/', function(req, res) {
-    res.sendFile('views/canvas.html', {root:__dirname});
+app.get('/', function (req, res) {
+    res.sendFile('views/canvas.html', {root: __dirname});
 })
 
 io.on('connection', (socket) => {
@@ -38,10 +38,9 @@ io.on('connection', (socket) => {
         var data = image.replace(/^data:image\/\w+;base64,/, "");
         var buf = Buffer.from(data, 'base64')
 
-        fs.writeFile("views/canvas.png", buf, function(err, result) {
+        fs.writeFile("views/canvas.png", buf, function (err, result) {
             if (err) console.log("error", err);
-        } )
-
+        })
     });
 
     socket.on("someoneDrawing", (data) => {
@@ -54,6 +53,20 @@ io.on('connection', (socket) => {
 
     socket.on("someoneErasing", (data) => {
         socket.broadcast.emit("someoneErasing", data);
+    })
+
+    socket.on("clearCanvas", () => {
+
+
+        fs.unlink('views/canvas.png', (err => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        }))
+
+        console.log("Deleting previous sessions canvas", "clear");
+        socket.broadcast.emit("clearCanvas");
     })
 
 
