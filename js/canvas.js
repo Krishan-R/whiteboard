@@ -1,3 +1,4 @@
+var authenticated = false;
 var focus = "login";
 
 var login = document.getElementById("login");
@@ -38,6 +39,7 @@ socket.on("usernameExists", function() {
 
 socket.on("usernameOK", function (users) {
     focus = "whiteboard"
+    authenticated = true;
     focusChanged()
 
     updateUserList(users)
@@ -207,6 +209,7 @@ socket.on('disconnect', function () {
 
 logoutButton.onclick = function () {
     focus = "login";
+    authenticated = false;
     focusChanged();
 
     socket.emit("userLoggedOut");
