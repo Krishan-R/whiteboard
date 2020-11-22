@@ -35,7 +35,6 @@ loginButton.onclick = function () {
 }
 
 socket.on("usernameExists", function() {
-    console.log("username exists");
     usernameError.style.display = "inline";
 })
 
@@ -44,28 +43,20 @@ socket.on("usernameOK", function (users) {
     whiteboard.style.display = "block";
     login.style.display = "none"
 
-    connectedUserList.innerHTML = "";
+    updateUserList(users)
 
-    for (let i = 0; i < users.length; i++) {
-
-        var li = document.createElement("li");
-        li.setAttribute("id", ("listElement"+i))
-
-        if (users[i] == usernameTextbox.value) {
-            li.appendChild(document.createTextNode(users[i] + " (You)"))
-        } else {
-            li.appendChild(document.createTextNode(users[i]))
-        }
-        connectedUserList.appendChild(li)
-    }
 })
 
 socket.on("userChanged", function(users) {
 
+    updateUserList(users)
+
+})
+
+function updateUserList(users) {
     connectedUserList.innerHTML = "";
 
     for (let i = 0; i < users.length; i++) {
-        console.log(users[i]);
 
         var li = document.createElement("li");
         li.setAttribute("id", ("listElement"+i))
@@ -76,7 +67,7 @@ socket.on("userChanged", function(users) {
         }
         connectedUserList.appendChild(li)
     }
-})
+}
 
 // load canvas from storage
 var img = new Image();
@@ -158,7 +149,6 @@ socket.on("someoneErasing", function(data) {
 })
 
 socket.on("clearCanvas", function() {
-    console.log("help");
     canvasContext.clearRect(0,0, canvas.width, canvas.height);
 })
 
