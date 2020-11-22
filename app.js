@@ -8,20 +8,20 @@ var io = require('socket.io').listen(server);
 fs = require('fs');
 sys = require('sys');
 
-fs.unlink('views/canvas.png', (err => {
-    if (err) {
-        console.error(err);
-        return;
-    }
-}))
-console.log("Deleting previous sessions canvas");
+// fs.unlink('views/canvas.png', (err => {
+//     if (err) {
+//         console.error(err);
+//         return;
+//     }
+// }))
+// console.log("Deleting previous sessions canvas");
 
 console.log("listening on *:8000");
 
 app.use(express.static(path.join(__dirname)));
 
 app.get('/', function(req, res) {
-    res.sendFile('views/index.html', {root:__dirname});
+    res.sendFile('views/canvas.html', {root:__dirname});
 })
 
 io.on('connection', (socket) => {
