@@ -1,5 +1,4 @@
-
-var authenticated = false;
+var focus = "login";
 
 var login = document.getElementById("login");
 var whiteboard = document.getElementById("whiteboard");
@@ -28,7 +27,6 @@ var erase = false;
 var lineWidth = weightSelector.value;
 
 var socket = io();
-whiteboard.style.display = "none";
 
 loginButton.onclick = function () {
     socket.emit("usernameEntered", usernameTextbox.value)
@@ -39,9 +37,8 @@ socket.on("usernameExists", function() {
 })
 
 socket.on("usernameOK", function (users) {
-    authenticated = true;
-    whiteboard.style.display = "block";
-    login.style.display = "none"
+    focus = "whiteboard"
+    focusChanged()
 
     updateUserList(users)
 
@@ -73,14 +70,13 @@ function updateUserList(users) {
 
         li.appendChild(document.createTextNode(users[i] + additionalText))
 
-
         connectedUserList.appendChild(li)
     }
 }
 
 socket.on("leaderDisconnected", function() {
 
-    if (authenticated) {
+    if (focus == "whiteboard") {
         alert("Leader Disconnected")
     }
 
@@ -210,17 +206,28 @@ socket.on('disconnect', function () {
 })
 
 logoutButton.onclick = function () {
-    authenticated = !authenticated;
-
-    if (authenticated) {
-        whiteboard.style.display = "block";
-        login.style.display = "none"
-    } else {
-        whiteboard.style.display = "none";
-        login.style.display = "block"
-    }
+    focus = "login";
+    focusChanged();
 
     socket.emit("userLoggedOut");
+}
+
+function focusChanged() {
+
+    switch (focus) {
+        case "login":
+            whiteboard.style.display = "none";
+            login.style.display = "block";
+            break;
+        case "whiteboard":
+            whiteboard.style.display = "block";
+            login.style.display = "none";
+            break;
+        default:
+            whiteboard.style.display = "none";
+            login.style.display = "block";
+            break;
+    }
 
 }
 
