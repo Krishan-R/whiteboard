@@ -1,5 +1,11 @@
 
-var login = true;
+var authenticated = false;
+
+var login = document.getElementById("login");
+var whiteboard = document.getElementById("whiteboard");
+var testButton = document.getElementById("testButton");
+
+whiteboard.style.display = "none";
 
 var clearCanvasButton = document.getElementById("clearCanvas");
 var eraseButton = document.getElementById("eraseButton");
@@ -145,17 +151,17 @@ socket.on('disconnect', function () {
     alert("connection lost");
 })
 
-var whiteboard = document.getElementById("whiteboard");
-var testButton = document.getElementById("testButton");
-
 testButton.onclick = function () {
     console.log("button pressed")
-    login = !login;
+    authenticated = !authenticated;
 
-    if (login) {
-        whiteboard.style.display = "none";
-    } else {
+    if (authenticated) {
         whiteboard.style.display = "block";
+        login.style.display = "none"
+    } else {
+        whiteboard.style.display = "none";
+        login.style.display = "block"
+
     }
 
 }
