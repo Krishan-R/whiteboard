@@ -6,6 +6,7 @@ var server = app.listen(process.env.PORT || 8000);
 var io = require('socket.io').listen(server);
 
 var users = new Array();
+var votes = new Array();
 
 fs = require('fs');
 sys = require('sys');
@@ -82,6 +83,10 @@ io.on('connection', (socket) => {
 
         console.log("current logged in users:", users);
 
+    })
+
+    socket.on("leaderSelected", (index) => {
+        socket.emit("userChanged", users);
     })
 
     socket.on("drawing", (image) => {

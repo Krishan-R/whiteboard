@@ -3,10 +3,14 @@ var focus = "login";
 
 var login = document.getElementById("login");
 var whiteboard = document.getElementById("whiteboard");
+var chooseLeader = document.getElementById("chooseLeader")
+
 var logoutButton = document.getElementById("logoutButton");
 var loginButton = document.getElementById("loginButton")
 var usernameTextbox = document.getElementById("usernameTextbox")
 var usernameError = document.getElementById("usernameError")
+
+var chooseLeadersList = document.getElementById("chooseLeadersList")
 
 var clearCanvasButton = document.getElementById("clearCanvas");
 var eraseButton = document.getElementById("eraseButton");
@@ -18,7 +22,6 @@ var yellowButton = document.getElementById("yellowButton");
 var greenButton = document.getElementById("greenButton");
 var weightSelector = document.getElementById('weightSelector');
 var connectedUserList = document.getElementById("connectedUsersList")
-
 var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
 var canvasContext = canvas.getContext("2d");
@@ -54,32 +57,43 @@ socket.on("userChanged", function(users) {
 
 function updateUserList(users) {
     connectedUserList.innerHTML = "";
+    chooseLeadersList.innerHTML = "";
 
     for (let i = 0; i < users.length; i++) {
 
-        var li = document.createElement("li");
+        let li = document.createElement("li");
         li.setAttribute("id", ("listElement"+i))
-
-        var additionalText = ""
-
+        let additionalText = ""
         if (i == 0) {
             additionalText += " (Leader)"
         }
-
         if (users[i] == usernameTextbox.value) {
             additionalText += " (You)"
         }
-
         li.appendChild(document.createTextNode(users[i] + additionalText))
-
         connectedUserList.appendChild(li)
+
+        let leaderLi = document.createElement("li");
+        leaderLi.setAttribute("id", ("leaderListElement") + i)
+        if (users[i] == usernameTextbox.value) {
+            leaderLi.appendChild(document.createTextNode(users[i] + " (You)"));
+        } else {
+            leaderLi.appendChild(document.createTextNode(users[i]));
+        }
+
+        if (i == selectedLeader) {
+            leaderLi.style.color = "#FF0000"
+        }
+        chooseLeadersList.appendChild(leaderLi)
+
     }
 }
 
 socket.on("leaderDisconnected", function() {
 
     if (focus == "whiteboard") {
-        alert("Leader Disconnected")
+        focus = "chooseLeader";
+        focusChanged();
     }
 
 })
@@ -221,18 +235,42 @@ function focusChanged() {
         case "login":
             whiteboard.style.display = "none";
             login.style.display = "block";
+            chooseLeader.style.display = "none";
             break;
         case "whiteboard":
             whiteboard.style.display = "block";
             login.style.display = "none";
+            chooseLeader.style.display = "none";
+            break;
+        case "chooseLeader":
+            whiteboard.style.display = "none";
+            login.style.display = "none";
+            chooseLeader.style.display = "block";
             break;
         default:
             whiteboard.style.display = "none";
             login.style.display = "block";
+            chooseLeader.style.display = "none";
             break;
     }
-
 }
+
+var selectedLeader = null;
+chooseLeadersList.addEventListener("click", function (e) {
+    if (e.target.tagName == "LI") {
+        let li = document.getElementById(e.target.id)
+
+        // console.log(li.childNodes[0].textContent)
+        
+        selectedLeader = e.target.id.slice(-1);
+
+        // console.log("selectedLeader:", selectedLeader);
+
+        socket.emit("leaderSelected", selectedLeader);
+
+    }
+})
+
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);
