@@ -399,3 +399,7 @@ function upload() {
     FR.readAsDataURL(this.files[0]);
 
 }
+
+//TODO leader select users to edit canvas
+//TODO leader can close whiteboard and session
+//TODO save whiteboard through voting, if more than 50% of the users respond with yes
