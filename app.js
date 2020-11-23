@@ -6,7 +6,8 @@ var server = app.listen(process.env.PORT || 8000);
 var io = require('socket.io').listen(server);
 
 var users = new Array();
-var votes = new Array();
+var leader = null;
+var currentlyVoting = false;
 
 fs = require('fs');
 sys = require('sys');
@@ -35,16 +36,18 @@ io.on('connection', (socket) => {
 
         console.log(socket.username, "has disconnected");
 
-        if (socket.username == users[0]) {
+        if (socket.username == leader) {
             console.log("user", socket.username, " was the leader")
             socket.broadcast.emit("leaderDisconnected");
+            currentlyVoting = true;
         }
 
         if (users.includes(socket.username)) {
+            socket.broadcast.emit("userDisconnected")
             users.splice(users.indexOf(socket.username), 1);
         }
 
-        socket.broadcast.emit("userChanged", users);
+        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
         console.log("current logged in users:", users);
 
     })
@@ -60,33 +63,116 @@ io.on('connection', (socket) => {
         } else {
             users.push(username);
             socket.username = username;
+            socket.authenticated = true;
             console.log("current user is", username);
             console.log("current logged in users:", users);
-            socket.emit("usernameOK", users)
-            socket.broadcast.emit("userChanged", users);
+
+            if (users.length == 1) {
+                leader = username;
+                currentlyVoting = false;
+            }
+
+            socket.emit("usernameOK", {userList: users, leaderUsername: leader})
+            socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
         }
     })
 
     socket.on("userLoggedOut", () => {
         console.log(socket.username, "logged out")
 
-        if (socket.username == users[0]) {
+        if (socket.username == leader) {
             console.log("user", socket.username, " was the leader")
             socket.broadcast.emit("leaderDisconnected");
+            currentlyVoting = true
         }
 
         if (users.includes(socket.username)) {
             users.splice(users.indexOf(socket.username), 1);
         }
 
-        socket.broadcast.emit("userChanged", users);
+        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
 
         console.log("current logged in users:", users);
 
     })
 
+    socket.on("votingStatus", () => {
+        socket.emit("votingStatus", currentlyVoting)
+    })
+
     socket.on("leaderSelected", (index) => {
-        socket.emit("userChanged", users);
+        socket.emit("userChanged", {userList: users, leaderUsername: leader});
+        socket.vote = index;
+
+        var votes = new Map();
+        let connectedClients = io.sockets.sockets;
+
+        // add votes to map
+        for (let socketID in connectedClients) {
+            let s = connectedClients[socketID]
+
+            if (s.authenticated) {
+                if (isNaN(votes[s.vote])) {
+                    votes[s.vote] = 1
+                } else {
+                    votes[s.vote] += 1
+                }
+            }
+        }
+
+        var highest = { key: null,
+                        value: 0,
+                        tie: false}
+        var notVoted = 0;
+
+        // count votes to see highest
+        for (var key in votes) {
+            if (key == "undefined") {
+                notVoted += votes[key];
+                console.log(votes, "has not voted")
+            } else {
+
+                if (votes[key] > highest.value) {
+                    highest.key = key
+                    highest.value = votes[key]
+                    highest.tie = false
+                } else if (votes[key] == highest.value) {
+                    highest.tie = true;
+                }
+            }
+        }
+
+        // update clients with results
+        if (notVoted != 0) {
+            console.log(notVoted, "users have not voted!")
+            socket.emit("notVoted");
+            socket.broadcast.emit("notVoted");
+        } else if (highest.tie) {
+            console.log("there is a tie")
+            socket.emit("votingTie")
+            socket.broadcast.emit("votingTie")
+        } else {
+            console.log("highest is key", users[highest.key], "with value", highest.value);
+
+            leader = users[highest.key]
+
+            // reset votes
+            for (let socketID in connectedClients) {
+                let s = connectedClients[socketID]
+                s.vote = "undefined";
+            }
+
+            socket.broadcast.emit("votingFinished", {userList: users, leaderUsername: leader})
+            socket.emit("votingFinished", {userList: users, leaderUsername: leader})
+            currentlyVoting = false
+        }
+
+
+        // console.log(highest.key, highest.value, highest.tie);
+        // console.log(votes);
+
+
+
     })
 
     socket.on("drawing", (image) => {

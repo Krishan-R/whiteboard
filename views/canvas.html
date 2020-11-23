@@ -68,11 +68,14 @@
         <button id="logoutButton">log out</button>
     </div>
 
-    <div id="chooseLeader">
+    <div id="chooseLeader" style=display:none;>
         <h1>Leader disconnected - Choose a new leader to continue</h1>
 
         <h2>Connected Users</h2>
         <ul id="chooseLeadersList"></ul>
+
+        <h2 style="color: red; display: none" id="notVoted">Some users have not voted yet!</h2>
+        <h2 style="color: red;display: none" id="votingTie">There is a tie!</h2>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>

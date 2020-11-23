@@ -1,5 +1,6 @@
 var authenticated = false;
 var focus = "login";
+var leader = null;
 
 var login = document.getElementById("login");
 var whiteboard = document.getElementById("whiteboard");
@@ -32,30 +33,50 @@ var lineWidth = weightSelector.value;
 
 var socket = io();
 
+socket.emit("votingStatus");
+
+socket.on("votingStatus", function(status) {
+    if (authenticated) {
+        if (status == true) {
+            focus = "chooseLeader"
+            focusChanged();
+        }
+    }
+})
+
 loginButton.onclick = function () {
-    socket.emit("usernameEntered", usernameTextbox.value)
+    if (usernameTextbox.value != "") {
+        socket.emit("usernameEntered", usernameTextbox.value)
+    }
 }
 
 socket.on("usernameExists", function() {
     usernameError.style.display = "inline";
 })
 
-socket.on("usernameOK", function (users) {
+socket.on("usernameOK", function (data) {
+
     focus = "whiteboard"
     authenticated = true;
     focusChanged()
 
-    updateUserList(users)
+    updateUserList(data)
+
+    socket.emit("votingStatus");
 
 })
 
-socket.on("userChanged", function(users) {
+socket.on("userChanged", function(data) {
 
-    updateUserList(users)
+    updateUserList(data)
 
 })
 
-function updateUserList(users) {
+
+function updateUserList(data) {
+    users = data.userList;
+    leader = data.leaderUsername;
+
     connectedUserList.innerHTML = "";
     chooseLeadersList.innerHTML = "";
 
@@ -64,7 +85,7 @@ function updateUserList(users) {
         let li = document.createElement("li");
         li.setAttribute("id", ("listElement"+i))
         let additionalText = ""
-        if (i == 0) {
+        if (users[i] == leader) {
             additionalText += " (Leader)"
         }
         if (users[i] == usernameTextbox.value) {
@@ -89,11 +110,45 @@ function updateUserList(users) {
     }
 }
 
+var selectedLeader = null;
+chooseLeadersList.addEventListener("click", function (e) {
+    if (e.target.tagName == "LI") {
+        let li = document.getElementById(e.target.id)
+
+        selectedLeader = e.target.id.slice(-1);
+
+        socket.emit("leaderSelected", selectedLeader);
+
+    }
+})
+
 socket.on("leaderDisconnected", function() {
 
     if (focus == "whiteboard") {
         focus = "chooseLeader";
         focusChanged();
+    }
+})
+
+socket.on("notVoted", function () {
+    document.getElementById("notVoted").style.display = "inline"
+})
+
+socket.on("votingTie", function () {
+    document.getElementById("notVoted").style.display = "none"
+    document.getElementById("votingTie").style.display = "inline"
+})
+
+socket.on("votingFinished", function(data) {
+    leader = data.leaderUsername
+    document.getElementById("notVoted").style.display = "none"
+    document.getElementById("votingTie").style.display = "none"
+    selectedLeader = null;
+    updateUserList(data);
+
+    if (authenticated){
+        focus = "whiteboard";
+        focusChanged()
     }
 
 })
@@ -254,23 +309,6 @@ function focusChanged() {
             break;
     }
 }
-
-var selectedLeader = null;
-chooseLeadersList.addEventListener("click", function (e) {
-    if (e.target.tagName == "LI") {
-        let li = document.getElementById(e.target.id)
-
-        // console.log(li.childNodes[0].textContent)
-        
-        selectedLeader = e.target.id.slice(-1);
-
-        // console.log("selectedLeader:", selectedLeader);
-
-        socket.emit("leaderSelected", selectedLeader);
-
-    }
-})
-
 
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);
