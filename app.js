@@ -161,10 +161,6 @@ io.on('connection', (socket) => {
         }
     })
 
-    socket.on("updateImage", () => {
-
-    })
-
     socket.on("drawing", (image) => {
 
         var data = image.replace(/^data:image\/\w+;base64,/, "");
@@ -200,7 +196,28 @@ io.on('connection', (socket) => {
         socket.broadcast.emit("clearCanvas");
     })
 
+    socket.on("updateCanvas", (sendAll) => {
 
+        let tempPath = "views/" + Math.floor(Math.random() * 1001) + ".png";
+
+        fs.copyFile('views/canvas.png', tempPath, (err) => {
+            console.log('views/canvas.png was copied to', tempPath);
+            socket.emit("updateCanvas", tempPath)
+        });
+    })
+
+    socket.on("deleteTempImage", (path) => {
+        fs.unlink(path, (err => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+        }))
+    })
+
+    socket.on("updateClients", () => {
+        socket.broadcast.emit("updateClients");
+    })
 });
 
 

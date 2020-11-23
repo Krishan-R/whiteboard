@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Whiteboard</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="CSS/styles.css">
 </head>
     <body>
@@ -23,8 +24,8 @@
 
     <div id="whiteboard" style="display: none">
         <div id="colourPicker">
-            <button id="clearCanvas">New</button>
-            <input type="file" id="uploadFile" accept="image/png" style="display: none">
+            <button id="clearCanvas" style="margin: 5px 5px 5px 0px;">New</button>
+            <input type="file" id="uploadFile" accept="image/png" style="display: none; margin: auto 5px">
             <button class="colourButton" id="eraseButton" style="background-color: white"></button>
             <button class="colourButton" id="blackButton" style="background-color: #000000"></button>
             <button class="colourButton" id="blueButton" style="background-color: #0000ff"></button>
@@ -32,7 +33,7 @@
             <button class="colourButton" id="redButton" style="background-color: #ff0000"></button>
             <button class="colourButton" id="yellowButton" style="background-color: #ffff00"></button>
             <button class="colourButton" id="greenButton" style="background-color: #008000"></button>
-            <select id="weightSelector">
+            <select id="weightSelector" style="margin: auto 5px;">
                 <option>1</option>
                 <option>2</option>
                 <option>3</option>
@@ -54,6 +55,9 @@
                 <option>19</option>
                 <option>20</option>
             </select>
+
+            <button id="syncButton" style="margin: auto 5px"><i class="material-icons" style="font-size: 17px;">sync</i></button>
+
         </div>
 
         <div id="canvasDiv">

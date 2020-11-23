@@ -25,6 +25,7 @@ var redButton = document.getElementById("redButton");
 var yellowButton = document.getElementById("yellowButton");
 var greenButton = document.getElementById("greenButton");
 var weightSelector = document.getElementById('weightSelector');
+var syncButton = document.getElementById("syncButton")
 var connectedUserList = document.getElementById("connectedUsersList")
 var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
@@ -66,8 +67,10 @@ socket.on("usernameOK", function (data) {
     authenticated = true;
 
     if (username == leader) {
+        clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
     } else {
+        clearCanvasButton.style.display = "none"
         uploadFile.style.display = "none"
     }
 
@@ -158,8 +161,10 @@ socket.on("votingFinished", function (data) {
     document.getElementById("votingTie").style.display = "none"
 
     if (username == leader) {
+        clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
     } else {
+        clearCanvasButton.style.display = "none"
         uploadFile.style.display = "none"
     }
 
@@ -167,6 +172,7 @@ socket.on("votingFinished", function (data) {
     updateUserList(data);
 
     if (leader == username) {
+        clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
     }
 
@@ -192,7 +198,6 @@ var start = function (event) {
 }
 
 var stop = function (event) {
-    console.log("stopped called");
     socket.emit("stoppedDrawing");
     ink = false;
     canvasContext.beginPath();
@@ -272,6 +277,22 @@ socket.on("clearCanvas", function () {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 })
 
+socket.on("updateCanvas", function (newImageSrc) {
+
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+    var image = new Image();
+    image.src = newImageSrc;
+    image.onload = function () {
+        canvasContext.drawImage(image, 0, 0);
+        socket.emit("deleteTempImage", newImageSrc)
+    }
+})
+
+socket.on("updateClients", function () {
+    socket.emit("updateCanvas");
+})
+
 clearCanvasButton.onclick = function () {
 
     if (username == leader) {
@@ -282,18 +303,6 @@ clearCanvasButton.onclick = function () {
     }
 
 }
-
-// loadCanvasButton.onclick = function () {
-//     console.log("button clicked");
-//
-//     if (username == leader) {
-//
-//     } else {
-//         alert("You are not the leader!")
-//     }
-//
-// }
-
 
 eraseButton.onclick = function () {
     erase = true;
@@ -324,6 +333,9 @@ greenButton.onclick = function () {
 }
 weightSelector.onchange = function () {
     lineWidth = weightSelector.value;
+}
+syncButton.onclick = function () {
+    socket.emit("updateCanvas");
 }
 
 socket.on('disconnect', function () {
@@ -375,17 +387,15 @@ function upload() {
     FR.addEventListener("load", (evt) => {
         const img = new Image();
         img.addEventListener("load", () => {
-            canvasContext.clearRect(0, 0, canvasContext.width, canvasContext.height);
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
             canvasContext.drawImage(img, 0, 0)
             var newImage = canvas.toDataURL();
             socket.emit("drawing", newImage);
+            socket.emit("updateClients");
+
         });
         img.src = evt.target.result;
     });
     FR.readAsDataURL(this.files[0]);
-
-
-    //create temp/duplicate file to force sync
-    // id created in node which is sent to all clients to get image
 
 }
