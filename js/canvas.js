@@ -250,8 +250,14 @@ socket.on("clearCanvas", function () {
 })
 
 clearCanvasButton.onclick = function () {
-    socket.emit("clearCanvas");
-    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (username == leader) {
+        socket.emit("clearCanvas");
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    } else {
+        alert("you are not the leader!")
+    }
+
 }
 eraseButton.onclick = function () {
     erase = true;
