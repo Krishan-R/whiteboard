@@ -91,9 +91,7 @@ io.on('connection', (socket) => {
         }
 
         socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
-
         console.log("current logged in users:", users);
-
     })
 
     socket.on("votingStatus", () => {
@@ -129,7 +127,6 @@ io.on('connection', (socket) => {
         for (var key in votes) {
             if (key == "undefined") {
                 notVoted += votes[key];
-                console.log(votes, "has not voted")
             } else {
 
                 if (votes[key] > highest.value) {
@@ -144,16 +141,12 @@ io.on('connection', (socket) => {
 
         // update clients with results
         if (notVoted != 0) {
-            // console.log(notVoted, "users have not voted!")
             socket.emit("notVoted");
             socket.broadcast.emit("notVoted");
         } else if (highest.tie) {
-            // console.log("there is a tie")
             socket.emit("votingTie")
             socket.broadcast.emit("votingTie")
         } else {
-            // console.log("highest is key", users[highest.key], "with value", highest.value);
-
             leader = users[highest.key]
 
             // reset votes
@@ -166,13 +159,6 @@ io.on('connection', (socket) => {
             socket.emit("votingFinished", {userList: users, leaderUsername: leader})
             currentlyVoting = false
         }
-
-
-        // console.log(highest.key, highest.value, highest.tie);
-        // console.log(votes);
-
-
-
     })
 
     socket.on("drawing", (image) => {
@@ -206,7 +192,7 @@ io.on('connection', (socket) => {
             }
         }))
 
-        console.log("Deleting previous sessions canvas", "clear");
+        console.log("Deleting previous sessions canvas");
         socket.broadcast.emit("clearCanvas");
     })
 
