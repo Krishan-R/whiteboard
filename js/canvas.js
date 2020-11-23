@@ -16,6 +16,7 @@ var usernameError = document.getElementById("usernameError")
 var chooseLeadersList = document.getElementById("chooseLeadersList")
 
 var clearCanvasButton = document.getElementById("clearCanvas");
+var uploadFile = document.getElementById("uploadFile")
 var eraseButton = document.getElementById("eraseButton");
 var blackButton = document.getElementById("blackButton");
 var blueButton = document.getElementById("blueButton");
@@ -36,6 +37,8 @@ var lineWidth = weightSelector.value;
 var socket = io();
 
 socket.emit("votingStatus");
+
+
 
 socket.on("votingStatus", function (status) {
     if (authenticated) {
@@ -58,8 +61,16 @@ socket.on("usernameExists", function () {
 
 socket.on("usernameOK", function (data) {
     username = usernameTextbox.value;
+    leader = data.leaderUsername;
     focus = "whiteboard"
     authenticated = true;
+
+    if (username == leader) {
+        uploadFile.style.display = "inline"
+    } else {
+        uploadFile.style.display = "none"
+    }
+
     focusChanged()
 
     updateUserList(data)
@@ -145,8 +156,19 @@ socket.on("votingFinished", function (data) {
     leader = data.leaderUsername
     document.getElementById("notVoted").style.display = "none"
     document.getElementById("votingTie").style.display = "none"
+
+    if (username == leader) {
+        uploadFile.style.display = "inline"
+    } else {
+        uploadFile.style.display = "none"
+    }
+
     selectedLeader = null;
     updateUserList(data);
+
+    if (leader == username) {
+        uploadFile.style.display = "inline"
+    }
 
     if (authenticated) {
         focus = "whiteboard";
@@ -170,6 +192,7 @@ var start = function (event) {
 }
 
 var stop = function (event) {
+    console.log("stopped called");
     socket.emit("stoppedDrawing");
     ink = false;
     canvasContext.beginPath();
@@ -255,10 +278,23 @@ clearCanvasButton.onclick = function () {
         socket.emit("clearCanvas");
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
     } else {
-        alert("you are not the leader!")
+        alert("You are not the leader!")
     }
 
 }
+
+// loadCanvasButton.onclick = function () {
+//     console.log("button clicked");
+//
+//     if (username == leader) {
+//
+//     } else {
+//         alert("You are not the leader!")
+//     }
+//
+// }
+
+
 eraseButton.onclick = function () {
     erase = true;
 }
@@ -331,3 +367,25 @@ function focusChanged() {
 canvas.addEventListener("mousedown", start);
 canvas.addEventListener("mouseup", stop);
 canvas.addEventListener("mousemove", drawing)
+uploadFile.addEventListener("change", upload)
+
+function upload() {
+
+    const FR = new FileReader();
+    FR.addEventListener("load", (evt) => {
+        const img = new Image();
+        img.addEventListener("load", () => {
+            canvasContext.clearRect(0, 0, canvasContext.width, canvasContext.height);
+            canvasContext.drawImage(img, 0, 0)
+            var newImage = canvas.toDataURL();
+            socket.emit("drawing", newImage);
+        });
+        img.src = evt.target.result;
+    });
+    FR.readAsDataURL(this.files[0]);
+
+
+    //create temp/duplicate file to force sync
+    // id created in node which is sent to all clients to get image
+
+}

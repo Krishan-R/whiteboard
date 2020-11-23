@@ -161,6 +161,10 @@ io.on('connection', (socket) => {
         }
     })
 
+    socket.on("updateImage", () => {
+
+    })
+
     socket.on("drawing", (image) => {
 
         var data = image.replace(/^data:image\/\w+;base64,/, "");
@@ -192,7 +196,7 @@ io.on('connection', (socket) => {
             }
         }))
 
-        console.log("Deleting previous sessions canvas");
+        console.log("Deleting previous sessions canvas", "clear");
         socket.broadcast.emit("clearCanvas");
     })
 
