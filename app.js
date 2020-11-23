@@ -144,15 +144,15 @@ io.on('connection', (socket) => {
 
         // update clients with results
         if (notVoted != 0) {
-            console.log(notVoted, "users have not voted!")
+            // console.log(notVoted, "users have not voted!")
             socket.emit("notVoted");
             socket.broadcast.emit("notVoted");
         } else if (highest.tie) {
-            console.log("there is a tie")
+            // console.log("there is a tie")
             socket.emit("votingTie")
             socket.broadcast.emit("votingTie")
         } else {
-            console.log("highest is key", users[highest.key], "with value", highest.value);
+            // console.log("highest is key", users[highest.key], "with value", highest.value);
 
             leader = users[highest.key]
 

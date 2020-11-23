@@ -1,5 +1,7 @@
 var authenticated = false;
 var focus = "login";
+
+var username = null;
 var leader = null;
 
 var login = document.getElementById("login");
@@ -35,7 +37,7 @@ var socket = io();
 
 socket.emit("votingStatus");
 
-socket.on("votingStatus", function(status) {
+socket.on("votingStatus", function (status) {
     if (authenticated) {
         if (status == true) {
             focus = "chooseLeader"
@@ -50,12 +52,12 @@ loginButton.onclick = function () {
     }
 }
 
-socket.on("usernameExists", function() {
+socket.on("usernameExists", function () {
     usernameError.style.display = "inline";
 })
 
 socket.on("usernameOK", function (data) {
-
+    username = usernameTextbox.value;
     focus = "whiteboard"
     authenticated = true;
     focusChanged()
@@ -66,7 +68,7 @@ socket.on("usernameOK", function (data) {
 
 })
 
-socket.on("userChanged", function(data) {
+socket.on("userChanged", function (data) {
 
     updateUserList(data)
 
@@ -83,12 +85,12 @@ function updateUserList(data) {
     for (let i = 0; i < users.length; i++) {
 
         let li = document.createElement("li");
-        li.setAttribute("id", ("listElement"+i))
+        li.setAttribute("id", ("listElement" + i))
         let additionalText = ""
         if (users[i] == leader) {
             additionalText += " (Leader)"
         }
-        if (users[i] == usernameTextbox.value) {
+        if (users[i] == username) {
             additionalText += " (You)"
         }
         li.appendChild(document.createTextNode(users[i] + additionalText))
@@ -96,7 +98,7 @@ function updateUserList(data) {
 
         let leaderLi = document.createElement("li");
         leaderLi.setAttribute("id", ("leaderListElement") + i)
-        if (users[i] == usernameTextbox.value) {
+        if (users[i] == username) {
             leaderLi.appendChild(document.createTextNode(users[i] + " (You)"));
         } else {
             leaderLi.appendChild(document.createTextNode(users[i]));
@@ -122,7 +124,7 @@ chooseLeadersList.addEventListener("click", function (e) {
     }
 })
 
-socket.on("leaderDisconnected", function() {
+socket.on("leaderDisconnected", function () {
 
     if (focus == "whiteboard") {
         focus = "chooseLeader";
@@ -139,14 +141,14 @@ socket.on("votingTie", function () {
     document.getElementById("votingTie").style.display = "inline"
 })
 
-socket.on("votingFinished", function(data) {
+socket.on("votingFinished", function (data) {
     leader = data.leaderUsername
     document.getElementById("notVoted").style.display = "none"
     document.getElementById("votingTie").style.display = "none"
     selectedLeader = null;
     updateUserList(data);
 
-    if (authenticated){
+    if (authenticated) {
         focus = "whiteboard";
         focusChanged()
     }
@@ -161,13 +163,13 @@ img.onload = function () {
     canvasContext.drawImage(img, 0, 0);
 }
 
-var start = function(event) {
+var start = function (event) {
     ink = true;
     rect = canvas.getBoundingClientRect();
     drawing(event);
 }
 
-var stop = function(event) {
+var stop = function (event) {
     socket.emit("stoppedDrawing");
     ink = false;
     canvasContext.beginPath();
@@ -177,7 +179,7 @@ var stop = function(event) {
     socket.emit("drawing", image);
 }
 
-var drawing = function(event) {
+var drawing = function (event) {
 
     mouseX = (event.clientX - rect.left) / (rect.right - rect.left) * canvas.width;
     mouseY = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
@@ -191,7 +193,12 @@ var drawing = function(event) {
             canvasContext.lineWidth = lineWidth;
             canvasContext.stroke();
 
-            socket.emit("someoneErasing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+            socket.emit("someoneErasing", {
+                x: mouseX,
+                y: mouseY,
+                strokeStyle: canvasContext.strokeStyle,
+                lineWidth: canvasContext.lineWidth
+            });
 
             canvasContext.globalCompositeOperation = "source-over";
 
@@ -201,13 +208,18 @@ var drawing = function(event) {
             canvasContext.lineWidth = lineWidth;
             canvasContext.stroke();
 
-            socket.emit("someoneDrawing", {x: mouseX, y: mouseY, strokeStyle: canvasContext.strokeStyle, lineWidth: canvasContext.lineWidth});
+            socket.emit("someoneDrawing", {
+                x: mouseX,
+                y: mouseY,
+                strokeStyle: canvasContext.strokeStyle,
+                lineWidth: canvasContext.lineWidth
+            });
 
         }
     }
 }
 
-socket.on("someoneDrawing", function(data) {
+socket.on("someoneDrawing", function (data) {
 
     canvasContext.lineTo(data.x, data.y);
     canvasContext.strokeStyle = data.strokeStyle;
@@ -216,11 +228,11 @@ socket.on("someoneDrawing", function(data) {
 
 })
 
-socket.on("stoppedDrawing", function() {
+socket.on("stoppedDrawing", function () {
     canvasContext.beginPath();
-    })
+})
 
-socket.on("someoneErasing", function(data) {
+socket.on("someoneErasing", function (data) {
 
     canvasContext.globalCompositeOperation = "destination-out";
 
@@ -233,13 +245,13 @@ socket.on("someoneErasing", function(data) {
 
 })
 
-socket.on("clearCanvas", function() {
-    canvasContext.clearRect(0,0, canvas.width, canvas.height);
+socket.on("clearCanvas", function () {
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 })
 
 clearCanvasButton.onclick = function () {
     socket.emit("clearCanvas");
-    canvasContext.clearRect(0,0, canvas.width, canvas.height);
+    canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 }
 eraseButton.onclick = function () {
     erase = true;

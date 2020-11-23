@@ -5,20 +5,21 @@ h1 {
 
 #colourPicker {
     width: 1280px;
-    /*background-color: red;*/
     display: flex;
-    /*flex-grow: 1;*/
     align-items: stretch;
     padding-bottom: 10px;
-
+    text-align: center;
 }
 
 .colourButton {
-    /*background-color: blue;*/
     flex-grow: 1;
-    margin-left: 5px;
-    margin-right: 5px;
+    margin: auto 5px;
     height: 20px;
+}
+
+#weightSelector {
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 #canvasDiv {
