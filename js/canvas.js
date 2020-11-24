@@ -188,17 +188,37 @@ socket.on("votingFinished", function (data) {
 })
 
 socket.on("saveCanvas", function() {
-    console.log("lkasnflknnfn")
-
     $("#saveDialog").dialog("open");
-
 })
 
 socket.on("majorityVote", function() {
 
     $("#saveDialog").dialog("close");
 
+    if (authenticated){
+        socket.emit("requestTempImage", "downloadFile");
+
+    }
 })
+
+socket.on("downloadFile", function(tempPath) {
+    var currentdate = new Date();
+    let filename = "Whiteboard: "
+        + currentdate.getFullYear() + "-"
+        + (currentdate.getMonth()+1).toString().padStart(2, '0') + "-"
+        + currentdate.getDate().toString().padStart(2, '0') + "T"
+        + currentdate.getHours().toString().padStart(2, '0') + "-"
+        + currentdate.getMinutes().toString().padStart(2, '0') + "-"
+        + currentdate.getSeconds().toString().padStart(2, '0');
+
+    var link = document.createElement('a')
+    link.download = filename + ".png"
+    link.href = tempPath;
+    link.click()
+
+    socket.emit("deleteTempImage", tempPath)
+})
+
 
 socket.on("noMajorityVote", function() {
     alert("Save vote completed and majority not met")
@@ -320,7 +340,7 @@ socket.on("clearCanvas", function () {
 })
 
 socket.on("updateCanvas", function (newImageSrc) {
-
+    console.log("updating canvas")
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
     var image = new Image();
@@ -332,7 +352,7 @@ socket.on("updateCanvas", function (newImageSrc) {
 })
 
 socket.on("updateClients", function () {
-    socket.emit("updateCanvas");
+    socket.emit("requestTempImage", "updateCanvas");
 })
 
 socket.on("closeCanvas", function () {
@@ -393,7 +413,7 @@ weightSelector.onchange = function () {
     lineWidth = weightSelector.value;
 }
 syncButton.onclick = function () {
-    socket.emit("updateCanvas");
+    socket.emit("requestTempImage", "updateCanvas");
 }
 
 socket.on('disconnect', function () {
@@ -459,4 +479,3 @@ function upload() {
 }
 
 //TODO leader select users to edit canvas
-//TODO save whiteboard through voting, if more than 50% of the users respond with yes

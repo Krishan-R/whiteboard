@@ -196,13 +196,24 @@ io.on('connection', (socket) => {
         socket.broadcast.emit("clearCanvas");
     })
 
-    socket.on("updateCanvas", (sendAll) => {
+    socket.on("requestTempImage", (redirect) => {
 
         let tempPath = "views/" + Math.floor(Math.random() * 1001) + ".png";
 
         fs.copyFile('views/canvas.png', tempPath, (err) => {
             console.log('views/canvas.png was copied to', tempPath);
-            socket.emit("updateCanvas", tempPath)
+
+            console.log(redirect)
+
+            switch (redirect) {
+                case "updateCanvas":
+                    socket.emit("updateCanvas", tempPath);
+                    break;
+                case "downloadFile":
+                    socket.emit("downloadFile", tempPath);
+                    break;
+            }
+
         });
     })
 
@@ -230,14 +241,9 @@ io.on('connection', (socket) => {
 
         socket.emit("saveCanvas")
         socket.broadcast.emit("saveCanvas")
-
-
     })
 
     socket.on("saveVoteSent", (result) => {
-        console.log("user", socket.username, "has voted", result)
-
-
         socket.saveVote = result;
         let votes = new Map();
 
@@ -255,11 +261,8 @@ io.on('connection', (socket) => {
                 } else {
                     votes[s.saveVote]++
                 }
-
             }
         }
-
-        console.log(votes);
 
         // calculate result
         if (votes["yes"] >= numberClients/2) {
