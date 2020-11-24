@@ -218,6 +218,14 @@ io.on('connection', (socket) => {
     socket.on("updateClients", () => {
         socket.broadcast.emit("updateClients");
     })
+
+    socket.on("closeCanvas", () => {
+        console.log("closeCanvasButton pressed");
+        socket.broadcast.emit("closeCanvas");
+        socket.emit("closeCanvas");
+    })
+
+
 });
 
 

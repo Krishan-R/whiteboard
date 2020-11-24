@@ -17,6 +17,7 @@ var chooseLeadersList = document.getElementById("chooseLeadersList")
 
 var clearCanvasButton = document.getElementById("clearCanvas");
 var uploadFile = document.getElementById("uploadFile")
+var closeCanvasButton = document.getElementById("closeCanvas")
 var eraseButton = document.getElementById("eraseButton");
 var blackButton = document.getElementById("blackButton");
 var blueButton = document.getElementById("blueButton");
@@ -69,9 +70,11 @@ socket.on("usernameOK", function (data) {
     if (username == leader) {
         clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
+        closeCanvasButton.style.display = "inline"
     } else {
         clearCanvasButton.style.display = "none"
         uploadFile.style.display = "none"
+        closeCanvasButton.style.display = "none"
     }
 
     focusChanged()
@@ -163,9 +166,11 @@ socket.on("votingFinished", function (data) {
     if (username == leader) {
         clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
+        closeCanvasButton.style.display = "inline"
     } else {
         clearCanvasButton.style.display = "none"
         uploadFile.style.display = "none"
+        closeCanvasButton.style.display = "none"
     }
 
     selectedLeader = null;
@@ -174,6 +179,7 @@ socket.on("votingFinished", function (data) {
     if (leader == username) {
         clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
+        closeCanvasButton.style.display = "inline"
     }
 
     if (authenticated) {
@@ -182,7 +188,6 @@ socket.on("votingFinished", function (data) {
     }
 
 })
-
 
 // load canvas from storage
 var img = new Image();
@@ -242,7 +247,6 @@ var drawing = function (event) {
                 strokeStyle: canvasContext.strokeStyle,
                 lineWidth: canvasContext.lineWidth
             });
-
         }
     }
 }
@@ -293,6 +297,15 @@ socket.on("updateClients", function () {
     socket.emit("updateCanvas");
 })
 
+socket.on("closeCanvas", function () {
+
+    if (authenticated){
+        alert("Leader has closed this whiteboard, you will be redirected");
+        location.reload();
+    }
+
+})
+
 clearCanvasButton.onclick = function () {
 
     if (username == leader) {
@@ -301,7 +314,10 @@ clearCanvasButton.onclick = function () {
     } else {
         alert("You are not the leader!")
     }
+}
 
+closeCanvasButton.onclick = function() {
+    socket.emit("closeCanvas");
 }
 
 eraseButton.onclick = function () {
@@ -350,6 +366,7 @@ logoutButton.onclick = function () {
     socket.emit("userLoggedOut");
 }
 
+
 function focusChanged() {
 
     switch (focus) {
@@ -397,9 +414,7 @@ function upload() {
         img.src = evt.target.result;
     });
     FR.readAsDataURL(this.files[0]);
-
 }
 
 //TODO leader select users to edit canvas
-//TODO leader can close whiteboard and session
 //TODO save whiteboard through voting, if more than 50% of the users respond with yes
