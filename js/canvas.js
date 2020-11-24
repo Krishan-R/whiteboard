@@ -479,3 +479,4 @@ function upload() {
 }
 
 //TODO leader select users to edit canvas
+//TODO if temp canvas already exists, retry with different name
