@@ -14,20 +14,18 @@
     <h1>Web Development Sucks</h1>
 
     <div id="login">
-
         <h2 style="text-decoration: underline">Enter username for access to whiteboard</h2>
         <label>Username:</label><br>
         <input type="text" id="usernameTextbox" name="username">
         <p1 style="color: red; display: none" id="usernameError">username already exists</p1>
         <br><br>
         <button id="loginButton">Submit</button>
-
     </div>
 
     <div id="whiteboard" style="display: none">
         <div id="colourPicker">
             <button id="clearCanvas" style="margin: 5px 5px 5px 0px; display: none">New</button>
-            <button id="saveCanvas" style="margin: 5px 5px 5px 0px; display: none">Save</button>
+            <button id="saveCanvas" style="margin: 5px 0px 5px 0px; display: none">Save</button>
             <input type="file" id="uploadFile" accept="image/png" style="display: none; margin: auto 5px">
             <button id="closeCanvas" style="margin: 5px 5px 5px 0px; display: none">Close</button>
             <button class="colourButton" id="eraseButton" style="background-color: white"></button>
@@ -64,12 +62,7 @@
 
         </div>
 
-        <div id="saveDialog" title="Save Whiteboard">
-
-
-
-        </div>
-
+        <div id="saveDialog" title="Save Whiteboard"></div>
 
         <div id="canvasDiv">
             <canvas id="myCanvas" width="1280" height="720" style="border:1px solid black"></canvas>
