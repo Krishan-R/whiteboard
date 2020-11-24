@@ -16,6 +16,7 @@ var usernameError = document.getElementById("usernameError")
 var chooseLeadersList = document.getElementById("chooseLeadersList")
 
 var clearCanvasButton = document.getElementById("clearCanvas");
+var saveCanvasButton = document.getElementById("saveCanvas")
 var uploadFile = document.getElementById("uploadFile")
 var closeCanvasButton = document.getElementById("closeCanvas")
 var eraseButton = document.getElementById("eraseButton");
@@ -71,10 +72,12 @@ socket.on("usernameOK", function (data) {
         clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
         closeCanvasButton.style.display = "inline"
+        saveCanvasButton.style.display = "inline"
     } else {
         clearCanvasButton.style.display = "none"
         uploadFile.style.display = "none"
         closeCanvasButton.style.display = "none"
+        saveCanvasButton.style.display = "none"
     }
 
     focusChanged()
@@ -167,27 +170,62 @@ socket.on("votingFinished", function (data) {
         clearCanvasButton.style.display = "inline"
         uploadFile.style.display = "inline"
         closeCanvasButton.style.display = "inline"
+        saveCanvasButton.style.display = "inline"
     } else {
         clearCanvasButton.style.display = "none"
         uploadFile.style.display = "none"
         closeCanvasButton.style.display = "none"
+        saveCanvasButton.style.display = "none"
     }
 
     selectedLeader = null;
     updateUserList(data);
 
-    if (leader == username) {
-        clearCanvasButton.style.display = "inline"
-        uploadFile.style.display = "inline"
-        closeCanvasButton.style.display = "inline"
-    }
-
     if (authenticated) {
         focus = "whiteboard";
         focusChanged()
     }
+})
+
+socket.on("saveCanvas", function() {
+    console.log("lkasnflknnfn")
+
+    $("#saveDialog").dialog("open");
 
 })
+
+socket.on("majorityVote", function() {
+
+    $("#saveDialog").dialog("close");
+
+})
+
+socket.on("noMajorityVote", function() {
+    alert("Save vote completed and majority not met")
+})
+
+$(function() {
+
+    $("#saveDialog").dialog({
+        modal: true,
+        title: 'Save Whiteboard',
+        zIndex: 10000,
+        autoOpen: false,
+        width: 'auto',
+        resizable: false,
+        buttons: {
+            Yes: function() {
+                $("#saveDialog").dialog("close");
+                socket.emit("saveVoteSent", "yes")
+            },
+            No: function() {
+                $("#saveDialog").dialog("close");
+                socket.emit("saveVoteSent", "no")
+            }
+        },
+    });
+})
+
 
 // load canvas from storage
 var img = new Image();
@@ -314,6 +352,10 @@ clearCanvasButton.onclick = function () {
     } else {
         alert("You are not the leader!")
     }
+}
+
+saveCanvasButton.onclick = function () {
+    socket.emit("saveCanvas")
 }
 
 closeCanvasButton.onclick = function() {

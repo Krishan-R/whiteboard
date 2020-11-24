@@ -225,6 +225,75 @@ io.on('connection', (socket) => {
         socket.emit("closeCanvas");
     })
 
+    socket.on("saveCanvas", () => {
+        console.log("save Canvas pressed");
+
+        socket.emit("saveCanvas")
+        socket.broadcast.emit("saveCanvas")
+
+
+    })
+
+    socket.on("saveVoteSent", (result) => {
+        console.log("user", socket.username, "has voted", result)
+
+
+        socket.saveVote = result;
+        let votes = new Map();
+
+        let numberClients = 0
+        let connectedClients = io.sockets.sockets;
+
+        // count votes
+        for (var sockets in connectedClients) {
+            let s = connectedClients[sockets]
+            if (s.authenticated) {
+                numberClients++
+
+                if (isNaN(votes[s.saveVote])) {
+                    votes[s.saveVote] = 1
+                } else {
+                    votes[s.saveVote]++
+                }
+
+            }
+        }
+
+        console.log(votes);
+
+        // calculate result
+        if (votes["yes"] >= numberClients/2) {
+            console.log("majority")
+
+            socket.emit("majorityVote")
+            socket.broadcast.emit("majorityVote")
+
+            // reset votes
+            for (var sockets in connectedClients) {
+                let s = connectedClients[sockets]
+                s.saveVote = "undefined"
+            }
+
+        } else {
+            if (votes["undefined"] > 0) {
+                console.log("there are still users left to vote")
+            } else {
+                console.log("all users have voted and no majority")
+
+                for (var sockets in connectedClients) {
+                    let s = connectedClients[sockets]
+                    s.saveVote = "undefined"
+                }
+
+                socket.emit("noMajorityVote")
+                socket.broadcast.emit("noMajorityVote")
+
+            }
+        }
+
+
+    })
+
 
 });
 
