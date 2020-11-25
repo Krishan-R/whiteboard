@@ -200,12 +200,16 @@ io.on('connection', (socket) => {
 
     socket.on("requestTempImage", (redirect) => {
 
-        let tempPath = "views/" + Math.floor(Math.random() * 1001) + ".png";
+        var result           = '';
+        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for ( var i = 0; i < 10; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
+        var tempPath = "views/" + result + ".png";
 
         fs.copyFile('views/canvas.png', tempPath, (err) => {
             console.log('views/canvas.png was copied to', tempPath);
-
-            console.log(redirect)
 
             switch (redirect) {
                 case "updateCanvas":
@@ -295,11 +299,5 @@ io.on('connection', (socket) => {
 
             }
         }
-
-
     })
-
-
 });
-
-
