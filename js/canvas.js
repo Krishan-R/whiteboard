@@ -40,9 +40,9 @@ var lineWidth = weightSelector.value;
 
 var socket = io();
 
-socket.emit("votingStatus");
+socket.emit("leaderVotingStatus");
 
-socket.on("votingStatus", function (status) {
+socket.on("leaderVotingStatus", function (status) {
     if (authenticated) {
         if (status == true) {
             focus = "chooseLeader"
@@ -83,7 +83,7 @@ socket.on("usernameOK", function (data) {
 
     updateUserList(data)
 
-    socket.emit("votingStatus");
+    socket.emit("leaderVotingStatus");
 
 })
 

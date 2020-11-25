@@ -7,7 +7,7 @@ var io = require('socket.io').listen(server);
 
 var users = new Array();
 var leader = null;
-var currentlyVoting = false;
+var currentlyLeaderVoting = false;
 
 fs = require('fs');
 sys = require('sys');
@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
         if (socket.username == leader) {
             console.log("user", socket.username, " was the leader")
             socket.broadcast.emit("leaderDisconnected");
-            currentlyVoting = true;
+            currentlyLeaderVoting = true;
         }
 
         if (users.includes(socket.username)) {
@@ -69,7 +69,7 @@ io.on('connection', (socket) => {
 
             if (users.length == 1) {
                 leader = username;
-                currentlyVoting = false;
+                currentlyLeaderVoting = false;
             }
 
             socket.emit("usernameOK", {userList: users, leaderUsername: leader})
@@ -83,7 +83,7 @@ io.on('connection', (socket) => {
         if (socket.username == leader) {
             console.log("user", socket.username, " was the leader")
             socket.broadcast.emit("leaderDisconnected");
-            currentlyVoting = true
+            currentlyLeaderVoting = true
         }
 
         if (users.includes(socket.username)) {
@@ -94,8 +94,8 @@ io.on('connection', (socket) => {
         console.log("current logged in users:", users);
     })
 
-    socket.on("votingStatus", () => {
-        socket.emit("votingStatus", currentlyVoting)
+    socket.on("leaderVotingStatus", () => {
+        socket.emit("leaderVotingStatus", currentlyLeaderVoting)
     })
 
     socket.on("leaderSelected", (index) => {
@@ -157,7 +157,7 @@ io.on('connection', (socket) => {
 
             socket.broadcast.emit("votingFinished", {userList: users, leaderUsername: leader})
             socket.emit("votingFinished", {userList: users, leaderUsername: leader})
-            currentlyVoting = false
+            currentlyLeaderVoting = false
         }
     })
 
