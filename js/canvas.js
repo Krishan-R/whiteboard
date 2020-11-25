@@ -33,6 +33,7 @@ var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
 var canvasContext = canvas.getContext("2d");
 
+var currentlySaveVoting = false
 var ink = false;
 var erase = false;
 var lineWidth = weightSelector.value;
@@ -40,8 +41,6 @@ var lineWidth = weightSelector.value;
 var socket = io();
 
 socket.emit("votingStatus");
-
-
 
 socket.on("votingStatus", function (status) {
     if (authenticated) {
@@ -162,6 +161,8 @@ socket.on("votingTie", function () {
 })
 
 socket.on("votingFinished", function (data) {
+    currentlySaveVoting = false
+
     leader = data.leaderUsername
     document.getElementById("notVoted").style.display = "none"
     document.getElementById("votingTie").style.display = "none"
@@ -188,12 +189,14 @@ socket.on("votingFinished", function (data) {
 })
 
 socket.on("saveCanvas", function() {
+    currentlySaveVoting = true
     $("#saveDialog").dialog("open");
 })
 
 socket.on("majorityVote", function() {
 
     $("#saveDialog").dialog("close");
+    currentlySaveVoting = false
 
     if (authenticated){
         socket.emit("requestTempImage", "downloadFile");
@@ -222,6 +225,7 @@ socket.on("downloadFile", function(tempPath) {
 
 socket.on("noMajorityVote", function() {
     alert("Save vote completed and majority not met")
+    currentlySaveVoting = false
 })
 
 $(function() {
@@ -255,9 +259,14 @@ img.onload = function () {
 }
 
 var start = function (event) {
-    ink = true;
-    rect = canvas.getBoundingClientRect();
-    drawing(event);
+
+    if (!currentlySaveVoting) {
+        ink = true;
+        rect = canvas.getBoundingClientRect();
+        drawing(event);
+    } else {
+        alert("Users are still voting to save the whiteboard")
+    }
 }
 
 var stop = function (event) {
@@ -482,4 +491,3 @@ function upload() {
 //TODO if temp canvas already exists, retry with different name
 //TODO leader vote before opening canvas in a new session
 //todo backup whiteboard every x time
-//TODO prevent users from drawing on board when voting to save
