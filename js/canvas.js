@@ -482,3 +482,4 @@ function upload() {
 //TODO if temp canvas already exists, retry with different name
 //TODO leader vote before opening canvas in a new session
 //todo backup whiteboard every x time
+//TODO prevent users from drawing on board when voting to save
