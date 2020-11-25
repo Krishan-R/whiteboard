@@ -216,6 +216,7 @@ io.on('connection', (socket) => {
                     socket.emit("updateCanvas", tempPath);
                     break;
                 case "downloadFile":
+                    console.log("sending to downloadFile")
                     socket.emit("downloadFile", tempPath);
                     break;
             }
@@ -276,6 +277,21 @@ io.on('connection', (socket) => {
 
             socket.emit("majorityVote")
             socket.broadcast.emit("majorityVote")
+
+            // var currentdate = new Date();
+            // let localCopy = "Backup whiteboards/Whiteboard: "
+            //     + currentdate.getFullYear() + "-"
+            //     + (currentdate.getMonth()+1).toString().padStart(2, '0') + "-"
+            //     + currentdate.getDate().toString().padStart(2, '0') + "T"
+            //     + currentdate.getHours().toString().padStart(2, '0') + "-"
+            //     + currentdate.getMinutes().toString().padStart(2, '0') + "-"
+            //     + currentdate.getSeconds().toString().padStart(2, '0');
+
+            // fs.copyFile('views/canvas.png', localCopy, (err) => {
+            //     console.log('views/canvas.png was copied to', localCopy);
+            //
+            // });
+
 
             // reset votes
             for (var sockets in connectedClients) {

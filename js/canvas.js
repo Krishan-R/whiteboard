@@ -205,6 +205,9 @@ socket.on("majorityVote", function() {
 })
 
 socket.on("downloadFile", function(tempPath) {
+
+    console.log("downloading file")
+
     var currentdate = new Date();
     let filename = "Whiteboard: "
         + currentdate.getFullYear() + "-"
@@ -219,7 +222,10 @@ socket.on("downloadFile", function(tempPath) {
     link.href = tempPath;
     link.click()
 
-    socket.emit("deleteTempImage", tempPath)
+    setTimeout(function() {
+        socket.emit("deleteTempImage", tempPath)
+    }, 5000)
+
 })
 
 
@@ -491,5 +497,4 @@ function upload() {
 }
 
 //TODO leader select users to edit canvas
-//TODO if temp canvas already exists, retry with different name
 //TODO backup whiteboard every x time
