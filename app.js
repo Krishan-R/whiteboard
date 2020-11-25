@@ -68,8 +68,10 @@ io.on('connection', (socket) => {
             console.log("current logged in users:", users);
 
             if (users.length == 1) {
-                leader = username;
-                currentlyLeaderVoting = false;
+                // leader = username;
+                // currentlyLeaderVoting = false;
+                currentlyLeaderVoting = true;
+                socket.emit("leaderVotingStatus", currentlyLeaderVoting)
             }
 
             socket.emit("usernameOK", {userList: users, leaderUsername: leader})
