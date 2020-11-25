@@ -427,6 +427,9 @@ syncButton.onclick = function () {
 
 socket.on('disconnect', function () {
     alert("connection lost");
+    authenticated = false
+    focus = "login"
+    focusChanged()
 })
 
 logoutButton.onclick = function () {
