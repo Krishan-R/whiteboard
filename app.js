@@ -200,8 +200,8 @@ io.on('connection', (socket) => {
 
     socket.on("requestTempImage", (redirect) => {
 
-        var result           = '';
-        var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         for ( var i = 0; i < 10; i++ ) {
             result += characters.charAt(Math.floor(Math.random() * characters.length));
         }
@@ -220,7 +220,6 @@ io.on('connection', (socket) => {
                     socket.emit("downloadFile", tempPath);
                     break;
             }
-
         });
     })
 
@@ -278,20 +277,19 @@ io.on('connection', (socket) => {
             socket.emit("majorityVote")
             socket.broadcast.emit("majorityVote")
 
-            // var currentdate = new Date();
-            // let localCopy = "Backup whiteboards/Whiteboard: "
-            //     + currentdate.getFullYear() + "-"
-            //     + (currentdate.getMonth()+1).toString().padStart(2, '0') + "-"
-            //     + currentdate.getDate().toString().padStart(2, '0') + "T"
-            //     + currentdate.getHours().toString().padStart(2, '0') + "-"
-            //     + currentdate.getMinutes().toString().padStart(2, '0') + "-"
-            //     + currentdate.getSeconds().toString().padStart(2, '0');
+            var currentdate = new Date();
+            let localCopy = "Backups/Whiteboard "
+                + currentdate.getFullYear() + "-"
+                + (currentdate.getMonth()+1).toString().padStart(2, '0') + "-"
+                + currentdate.getDate().toString().padStart(2, '0') + "T"
+                + currentdate.getHours().toString().padStart(2, '0') + "-"
+                + currentdate.getMinutes().toString().padStart(2, '0') + "-"
+                + currentdate.getSeconds().toString().padStart(2, '0') + ".png";
 
-            // fs.copyFile('views/canvas.png', localCopy, (err) => {
-            //     console.log('views/canvas.png was copied to', localCopy);
-            //
-            // });
+            fs.copyFile('views/canvas.png', localCopy, (err) => {
+                console.log('views/canvas.png was copied to', localCopy);
 
+            });
 
             // reset votes
             for (var sockets in connectedClients) {
