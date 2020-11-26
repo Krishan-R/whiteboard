@@ -69,8 +69,6 @@ io.on('connection', (socket) => {
             console.log("current logged in users:", users);
 
             if (users.length == 1) {
-                // leader = username;
-                // currentlyLeaderVoting = false;
                 currentlyLeaderVoting = true;
                 socket.emit("leaderVotingStatus", currentlyLeaderVoting)
             }
@@ -181,8 +179,6 @@ io.on('connection', (socket) => {
         socket.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList})
         socket.broadcast.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList})
 
-        console.log(editingList);
-
     })
 
     socket.on("drawing", (image) => {
@@ -238,7 +234,6 @@ io.on('connection', (socket) => {
                     socket.emit("updateCanvas", tempPath);
                     break;
                 case "downloadFile":
-                    console.log("sending to downloadFile")
                     socket.emit("downloadFile", tempPath);
                     break;
             }
@@ -259,14 +254,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on("closeCanvas", () => {
-        console.log("closeCanvasButton pressed");
         socket.broadcast.emit("closeCanvas");
         socket.emit("closeCanvas");
     })
 
     socket.on("saveCanvas", () => {
-        console.log("save Canvas pressed");
-
         socket.emit("saveCanvas")
         socket.broadcast.emit("saveCanvas")
     })
@@ -294,8 +286,6 @@ io.on('connection', (socket) => {
 
         // calculate result
         if (votes["yes"] >= numberClients/2) {
-            console.log("majority")
-
             socket.emit("majorityVote")
             socket.broadcast.emit("majorityVote")
 
@@ -323,7 +313,6 @@ io.on('connection', (socket) => {
             if (votes["undefined"] > 0) {
                 console.log("there are still users left to vote")
             } else {
-                console.log("all users have voted and no majority")
 
                 for (var sockets in connectedClients) {
                     let s = connectedClients[sockets]

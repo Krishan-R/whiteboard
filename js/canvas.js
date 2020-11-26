@@ -92,8 +92,6 @@ function updateUserList(data) {
     leader = data.leaderUsername;
     var editingList = data.editingList
 
-    console.log(editingList);
-
     connectedUserList.innerHTML = "";
     chooseLeadersList.innerHTML = "";
 
@@ -110,7 +108,6 @@ function updateUserList(data) {
             additionalText += " (You)"
         }
         if (editingList.indexOf(i.toString()) >= 0) {
-            console.log(i, "changing colour")
             li.style.color = "#FF0000"
         }
         li.appendChild(document.createTextNode(users[i] + additionalText))
