@@ -151,6 +151,7 @@ io.on('connection', (socket) => {
             socket.broadcast.emit("votingTie")
         } else {
             leader = users[highest.key]
+            editingList.push(highest.key)
 
             // reset votes
             for (let socketID in connectedClients) {
@@ -168,7 +169,10 @@ io.on('connection', (socket) => {
 
         // checks to see if user is already in editing list
         if (editingList.indexOf(index) >= 0) {
-            editingList.splice(editingList.indexOf(index), 1)
+
+            if (users[index] != leader) {
+                editingList.splice(editingList.indexOf(index), 1)
+            }
         } else {
             editingList.push(index);
         }
