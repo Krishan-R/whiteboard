@@ -151,6 +151,7 @@ io.on('connection', (socket) => {
             socket.broadcast.emit("votingTie")
         } else {
             leader = users[highest.key]
+            editingList = new Array();
             editingList.push(highest.key)
 
             // reset votes
