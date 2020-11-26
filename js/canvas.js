@@ -145,6 +145,16 @@ chooseLeadersList.addEventListener("click", function (e) {
     }
 })
 
+connectedUserList.addEventListener("click", function (e) {
+    if (e.target.tagName == "LI" && leader == username) {
+
+        let selectedUser = e.target.id.slice(-1);
+
+        socket.emit("editingUserSelected", selectedUser)
+
+    }
+})
+
 socket.on("leaderDisconnected", function () {
 
     if (focus == "whiteboard") {
@@ -256,16 +266,6 @@ $(function() {
             }
         },
     });
-})
-
-connectedUserList.addEventListener("click", function (e) {
-    if (e.target.tagName == "LI") {
-
-        let selectedUser = e.target.id.slice(-1);
-
-        socket.emit("editingUserSelected", selectedUser)
-
-    }
 })
 
 socket.on("editingListChanged", function(data) {
