@@ -497,4 +497,3 @@ function upload() {
 }
 
 //TODO leader select users to edit canvas
-//TODO backup whiteboard every x time
