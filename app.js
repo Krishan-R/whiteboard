@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
             users.splice(users.indexOf(socket.username), 1);
         }
 
-        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
+        socket.broadcast.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         console.log("current logged in users:", users);
 
     })
@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
             }
 
             socket.emit("usernameOK", {userList: users, leaderUsername: leader, editingList: editingList})
-            socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
+            socket.broadcast.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         }
     })
 
@@ -93,7 +93,7 @@ io.on('connection', (socket) => {
             users.splice(users.indexOf(socket.username), 1);
         }
 
-        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
+        socket.broadcast.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         console.log("current logged in users:", users);
     })
 
@@ -102,7 +102,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on("leaderSelected", (index) => {
-        socket.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
+        socket.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         socket.vote = index;
 
         var votes = new Map();

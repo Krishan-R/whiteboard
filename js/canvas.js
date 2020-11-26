@@ -87,11 +87,6 @@ socket.on("usernameOK", function (data) {
 
 })
 
-socket.on("userChanged", function (data) {
-    updateUserList(data)
-})
-
-
 function updateUserList(data) {
     users = data.userList;
     leader = data.leaderUsername;
@@ -274,7 +269,6 @@ connectedUserList.addEventListener("click", function (e) {
 })
 
 socket.on("editingListChanged", function(data) {
-
     updateUserList(data)
 })
 
