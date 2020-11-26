@@ -3,6 +3,7 @@ var focus = "login";
 
 var username = null;
 var leader = null;
+var editingList = new Array();
 
 var login = document.getElementById("login");
 var whiteboard = document.getElementById("whiteboard");
@@ -90,7 +91,7 @@ socket.on("usernameOK", function (data) {
 function updateUserList(data) {
     users = data.userList;
     leader = data.leaderUsername;
-    var editingList = data.editingList
+    editingList = data.editingList
 
     connectedUserList.innerHTML = "";
     chooseLeadersList.innerHTML = "";
@@ -280,9 +281,12 @@ img.onload = function () {
 var start = function (event) {
 
     if (!currentlySaveVoting) {
-        ink = true;
-        rect = canvas.getBoundingClientRect();
-        drawing(event);
+        if (editingList.indexOf(users.indexOf(username).toString()) >= 0) {
+            ink = true;
+            rect = canvas.getBoundingClientRect();
+            drawing(event);
+        }
+
     } else {
         alert("Users are still voting to save the whiteboard")
     }
