@@ -8,6 +8,7 @@ var io = require('socket.io').listen(server);
 var users = new Array();
 var leader = null;
 var currentlyLeaderVoting = false;
+var editingList = new Array();
 
 fs = require('fs');
 sys = require('sys');
@@ -47,7 +48,7 @@ io.on('connection', (socket) => {
             users.splice(users.indexOf(socket.username), 1);
         }
 
-        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
+        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         console.log("current logged in users:", users);
 
     })
@@ -74,8 +75,8 @@ io.on('connection', (socket) => {
                 socket.emit("leaderVotingStatus", currentlyLeaderVoting)
             }
 
-            socket.emit("usernameOK", {userList: users, leaderUsername: leader})
-            socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
+            socket.emit("usernameOK", {userList: users, leaderUsername: leader, editingList: editingList})
+            socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         }
     })
 
@@ -92,7 +93,7 @@ io.on('connection', (socket) => {
             users.splice(users.indexOf(socket.username), 1);
         }
 
-        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader});
+        socket.broadcast.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         console.log("current logged in users:", users);
     })
 
@@ -101,7 +102,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on("leaderSelected", (index) => {
-        socket.emit("userChanged", {userList: users, leaderUsername: leader});
+        socket.emit("userChanged", {userList: users, leaderUsername: leader, editingList: editingList});
         socket.vote = index;
 
         var votes = new Map();
@@ -157,10 +158,26 @@ io.on('connection', (socket) => {
                 s.vote = "undefined";
             }
 
-            socket.broadcast.emit("votingFinished", {userList: users, leaderUsername: leader})
-            socket.emit("votingFinished", {userList: users, leaderUsername: leader})
+            socket.broadcast.emit("votingFinished", {userList: users, leaderUsername: leader, editingList: editingList})
+            socket.emit("votingFinished", {userList: users, leaderUsername: leader, editingList: editingList})
             currentlyLeaderVoting = false
         }
+    })
+
+    socket.on("editingUserSelected", (index) => {
+
+        // checks to see if user is already in editing list
+        if (editingList.indexOf(index) >= 0) {
+            editingList.splice(editingList.indexOf(index), 1)
+        } else {
+            editingList.push(index);
+        }
+
+        socket.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList})
+        socket.broadcast.emit("editingListChanged", {userList: users, leaderUsername: leader, editingList: editingList})
+
+        console.log(editingList);
+
     })
 
     socket.on("drawing", (image) => {

@@ -88,21 +88,23 @@ socket.on("usernameOK", function (data) {
 })
 
 socket.on("userChanged", function (data) {
-
     updateUserList(data)
-
 })
 
 
 function updateUserList(data) {
     users = data.userList;
     leader = data.leaderUsername;
+    var editingList = data.editingList
+
+    console.log(editingList);
 
     connectedUserList.innerHTML = "";
     chooseLeadersList.innerHTML = "";
 
     for (let i = 0; i < users.length; i++) {
 
+        // connected user list
         let li = document.createElement("li");
         li.setAttribute("id", ("listElement" + i))
         let additionalText = ""
@@ -112,9 +114,15 @@ function updateUserList(data) {
         if (users[i] == username) {
             additionalText += " (You)"
         }
+        if (editingList.indexOf(i.toString()) >= 0) {
+            console.log(i, "changing colour")
+            li.style.color = "#FF0000"
+        }
         li.appendChild(document.createTextNode(users[i] + additionalText))
         connectedUserList.appendChild(li)
 
+
+        // vote leader list
         let leaderLi = document.createElement("li");
         leaderLi.setAttribute("id", ("leaderListElement") + i)
         if (users[i] == username) {
@@ -139,7 +147,6 @@ chooseLeadersList.addEventListener("click", function (e) {
         selectedLeader = e.target.id.slice(-1);
 
         socket.emit("leaderSelected", selectedLeader);
-
     }
 })
 
@@ -254,6 +261,21 @@ $(function() {
             }
         },
     });
+})
+
+connectedUserList.addEventListener("click", function (e) {
+    if (e.target.tagName == "LI") {
+
+        let selectedUser = e.target.id.slice(-1);
+
+        socket.emit("editingUserSelected", selectedUser)
+
+    }
+})
+
+socket.on("editingListChanged", function(data) {
+
+    updateUserList(data)
 })
 
 
