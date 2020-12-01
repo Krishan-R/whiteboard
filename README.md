@@ -16,7 +16,7 @@ You can deploy this web server using the popular Docker service by pulling the i
 ````
 docker run -d \
   --name=whiteboard \
-  --p 8000:8000 \
+  -p 8000:8000 \
   --restart unless-stopped \
   iamafk/co3201-assignment2
 ````
