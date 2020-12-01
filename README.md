@@ -55,11 +55,11 @@ You can also use tools like Watchtower to automatically update your images, howe
 
 ## Troubleshooting
 
-#### the container name "XXXXX" is already in use
+#### The container name "XXXXX" is already in use
 
 You already have a container with the name "XXXXX", please try to run the `docker create` script above with a different name
 
-#### driver failed programming external connectivity on endpoint "XXXXX"
+#### Driver failed programming external connectivity on endpoint "XXXXX"
 
 You already have a container running with the desired external port, causing a conflict. Please try creating the container using a different external port.
 
