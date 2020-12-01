@@ -57,7 +57,7 @@ You can also use tools like Watchtower to automatically update your images, howe
 
 #### The container name "XXXXX" is already in use
 
-You already have a container with the name "XXXXX", please try to run the `docker create` script above with a different name. You can use `docker container ls -a` to see the list of all your containers.
+You already have a container with the name "XXXXX", please try to run the `docker run` script above with a different name. You can use `docker container ls -a` to see the list of all your containers.
 
 #### Driver failed programming external connectivity on endpoint "XXXXX"
 
