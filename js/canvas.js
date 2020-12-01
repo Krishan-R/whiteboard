@@ -216,8 +216,6 @@ socket.on("majorityVote", function() {
 
 socket.on("downloadFile", function(tempPath) {
 
-    console.log("downloading file")
-
     var currentdate = new Date();
     let filename = "Whiteboard: "
         + currentdate.getFullYear() + "-"
@@ -372,7 +370,6 @@ socket.on("clearCanvas", function () {
 })
 
 socket.on("updateCanvas", function (newImageSrc) {
-    console.log("updating canvas")
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
     var image = new Image();

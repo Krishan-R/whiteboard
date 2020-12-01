@@ -311,7 +311,6 @@ io.on('connection', (socket) => {
 
         } else {
             if (votes["undefined"] > 0) {
-                console.log("there are still users left to vote")
             } else {
 
                 for (var sockets in connectedClients) {
