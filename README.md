@@ -12,7 +12,7 @@ See the features section for more information about the functionality of the web
 
 You can deploy this web server using the popular Docker service by pulling the image and creating a container:
 
-##### Docker CLI 
+#### Docker CLI 
 ````
 docker run -d \
   --name=whiteboard \
@@ -21,7 +21,7 @@ docker run -d \
   iamafk/co3201-assignment2
 ````
 
-##### Parameters
+#### Parameters
 
 Container images are configured using parameters passed at runtime, which are seperated by a colon and indicate <external>:<internal> resources respectively.
 For example `-p 6500:8000` would expose port 6500 to users whilst the container would access this data through port 8000.
@@ -34,14 +34,14 @@ For example `-p 6500:8000` would expose port 6500 to users whilst the container 
 | -p | The ports docker will publish to the host      | 
 | --restart | The containers restart policy, e.g. always, no, unless-stopped, on-failure      |
 
-##### Accessing the Web GUI
+#### Accessing the Web GUI
 
 To access the whiteboard GUI, you need to use a modern browser, such as Chrome/Firefox/Edge, and browse to `ip:port`.
 If you are accessing the whiteboard on the host machine, you can use localhost/127.0.0.1, otherwise you need to find the ip address of the host machine (e.g. 192.168.x.x if local).
 
 The port will be the port you specified in the external port section of the docker run command e.g. `-p 6500:8000` would be accessed in the browser using the port 6500.
 
-##### Updating the Application
+#### Updating the Application
 
 If there any future updates, you can easily update your docker image to run updated containers:
 
