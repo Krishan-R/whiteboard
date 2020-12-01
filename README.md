@@ -20,6 +20,7 @@ docker run -d \
   --restart unless-stopped \
   iamafk/co3201-assignment2
 ````
+This script will look for the image iamafk/co3201-assignment2 locally to create the container. If this cannot be found locally, the image will be pulled (downloaded) from the docker registry and stored locally for future containers.
 
 #### Parameters
 
