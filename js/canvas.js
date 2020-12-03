@@ -340,12 +340,14 @@ var drawing = function (event) {
 }
 
 socket.on("someoneDrawing", function (data) {
+    let oldColour = canvasContext.strokeStyle
 
     canvasContext.lineTo(data.x, data.y);
     canvasContext.strokeStyle = data.strokeStyle;
     canvasContext.lineWidth = data.lineWidth;
     canvasContext.stroke();
 
+    canvasContext.strokeStyle = oldColour;
 })
 
 socket.on("stoppedDrawing", function () {
