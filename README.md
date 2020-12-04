@@ -4,7 +4,7 @@ This is a cloud-based, real-time and collaborative whiteboard allowing multiple 
 
 ## About
 
-This was built using Node.js with HTML/CSS/Javascript, with the user of sockets for communication between clients.
+Built using Node.js with HTML/CSS/Javascript, and the use of sockets for communication between clients, this software allows multiple users to draw and collaborate on a shared whiteboard.
 Clients can connect to the Node.js server using any modern web browser (Chrome/Firefox/Edge etc) through the designated port (8000 by default).
 See the features section for more information about the functionality of the web application.
 
