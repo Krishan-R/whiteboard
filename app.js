@@ -36,6 +36,7 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
 
         console.log(socket.username, "has disconnected");
+        socket.authenticated = false
 
         if (socket.username == leader) {
             console.log("user", socket.username, " was the leader")
@@ -80,6 +81,7 @@ io.on('connection', (socket) => {
 
     socket.on("userLoggedOut", () => {
         console.log(socket.username, "logged out")
+        socket.authenticated = false
 
         if (socket.username == leader) {
             console.log("user", socket.username, " was the leader")

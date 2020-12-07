@@ -511,5 +511,3 @@ function upload() {
     });
     FR.readAsDataURL(this.files[0]);
 }
-
-//TODO leader select users to edit canvas
