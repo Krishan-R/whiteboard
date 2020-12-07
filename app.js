@@ -201,10 +201,6 @@ io.on('connection', (socket) => {
         socket.broadcast.emit("stoppedDrawing", data);
     })
 
-    socket.on("someoneErasing", (data) => {
-        socket.broadcast.emit("someoneErasing", data);
-    })
-
     socket.on("clearCanvas", () => {
 
         fs.unlink('views/canvas.png', (err => {

@@ -34,6 +34,11 @@ var canvas = document.getElementById("myCanvas");
 var rect = canvas.getBoundingClientRect();
 var canvasContext = canvas.getContext("2d");
 
+var fakeCanvas = document.createElement("canvas")
+fakeCanvas.height = canvas.height
+fakeCanvas.width = canvas.width
+var fakectx = fakeCanvas.getContext("2d")
+
 var currentlySaveVoting = false
 var ink = false;
 var erase = false;
@@ -275,6 +280,14 @@ img.src = 'views/canvas.png';
 img.onload = function () {
     canvasContext.drawImage(img, 0, 0);
 }
+addBackground();
+
+function addBackground() {
+    canvasContext.globalCompositeOperation = "destination-over";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillRect(0, 0, canvas.width, canvas.height);
+    canvasContext.globalCompositeOperation = "source-over";
+}
 
 var start = function (event) {
 
@@ -306,25 +319,9 @@ var drawing = function (event) {
     mouseY = (event.clientY - rect.top) / (rect.bottom - rect.top) * canvas.height;
 
     if (ink) {
-        if (erase) {
 
-            canvasContext.globalCompositeOperation = "destination-out";
 
-            canvasContext.lineTo(mouseX, mouseY);
-            canvasContext.lineWidth = lineWidth;
-            canvasContext.stroke();
-
-            socket.emit("someoneErasing", {
-                x: mouseX,
-                y: mouseY,
-                strokeStyle: canvasContext.strokeStyle,
-                lineWidth: canvasContext.lineWidth
-            });
-
-            canvasContext.globalCompositeOperation = "source-over";
-
-        } else {
-
+            // canvasContext.beginPath();
             canvasContext.lineTo(mouseX, mouseY);
             canvasContext.lineWidth = lineWidth;
             canvasContext.stroke();
@@ -335,44 +332,32 @@ var drawing = function (event) {
                 strokeStyle: canvasContext.strokeStyle,
                 lineWidth: canvasContext.lineWidth
             });
-        }
     }
 }
 
 socket.on("someoneDrawing", function (data) {
-    let oldColour = canvasContext.strokeStyle
-
-    canvasContext.lineTo(data.x, data.y);
-    canvasContext.strokeStyle = data.strokeStyle;
-    canvasContext.lineWidth = data.lineWidth;
-    canvasContext.stroke();
-
-    canvasContext.strokeStyle = oldColour;
+    fakectx.strokeStyle = data.strokeStyle;
+    fakectx.lineWidth = data.lineWidth;
+    fakectx.lineTo(data.x, data.y);
+    fakectx.stroke();
+    canvasContext.drawImage(fakeCanvas, 0, 0)
 })
 
 socket.on("stoppedDrawing", function () {
-    canvasContext.beginPath();
-})
-
-socket.on("someoneErasing", function (data) {
-
-    canvasContext.globalCompositeOperation = "destination-out";
-
-    canvasContext.lineTo(data.x, data.y);
-    canvasContext.strokeStyle = data.strokeStyle;
-    canvasContext.lineWidth = data.lineWidth;
-    canvasContext.stroke();
-
-    canvasContext.globalCompositeOperation = "source-over";
-
+    fakectx.beginPath();
+    canvasContext.drawImage(fakeCanvas, 0, 0)
+    // canvasContext.beginPath();
 })
 
 socket.on("clearCanvas", function () {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    fakectx.clearRect(0, 0, fakeCanvas.width, fakeCanvas.height);
+    addBackground();
 })
 
 socket.on("updateCanvas", function (newImageSrc) {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+    fakectx.clearRect(0, 0, fakeCanvas.width, fakeCanvas.height);
 
     var image = new Image();
     image.src = newImageSrc;
@@ -400,6 +385,7 @@ clearCanvasButton.onclick = function () {
     if (username == leader) {
         socket.emit("clearCanvas");
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        addBackground();
     } else {
         alert("You are not the leader!")
     }
@@ -414,7 +400,7 @@ closeCanvasButton.onclick = function() {
 }
 
 eraseButton.onclick = function () {
-    erase = true;
+    canvasContext.strokeStyle = "#ffffff";
 }
 blackButton.onclick = function () {
     erase = false;
@@ -444,6 +430,7 @@ weightSelector.onchange = function () {
     lineWidth = weightSelector.value;
 }
 syncButton.onclick = function () {
+    fakectx.clearRect(0, 0, fakeCanvas.width, fakeCanvas.height);
     socket.emit("requestTempImage", "updateCanvas");
 }
 
