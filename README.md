@@ -37,7 +37,7 @@ For example `-p 6500:8000` would expose port 6500 to users whilst the container 
 
 #### Accessing the Web GUI
 
-To access the whiteboard GUI, you need to use a modern browser, such as Chrome/Firefox/Edge, and browse to `ip:port`.
+To access the whiteboard GUI, you need to use a modern browser, such as Chrome/Firefox/Edge, and browse to `http://ip:port`.
 If you are accessing the whiteboard on the host machine, you can use localhost/127.0.0.1, otherwise you need to find the ip address of the host machine (e.g. 192.168.x.x if local).
 
 The port will be the port you specified in the external port section of the docker run command e.g. `-p 6500:8000` would be accessed in the browser using the port 6500.
