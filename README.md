@@ -71,3 +71,7 @@ The leader must select users to draw on the whiteboard. To do this, the leader c
 #### The whiteboard is saved before users have a chance to vote
 
 The system is designed so that as soon as 50% of the users vote to save the whiteboard, it automatically gets downloaded. If this threshold has been reached, regardless of if there are users left to vote, the current whiteboard will be downloaded.
+
+#### Secure Connection Failed /  This site can't provide a secure connection
+
+You have tried to access the web GUI using https, instead use http. See 'Accessing the Web GUI section' above.
