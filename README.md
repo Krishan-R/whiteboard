@@ -1,4 +1,4 @@
-# CO3201 Internet and Cloud Computing Assignment 2
+# CO3219 Internet and Cloud Computing Assignment 2
 
 This is a cloud-based, real-time and collaborative whiteboard allowing multiple users to draw on a canvas which can then be exported.
 
@@ -18,9 +18,9 @@ docker run -d \
   --name=whiteboard \
   -p 8000:8000 \
   --restart unless-stopped \
-  iamafk/co3201-assignment2
+  iamafk/co3219-assignment-2
 ````
-This script will look for the image iamafk/co3201-assignment2 locally to create the container. If this cannot be found locally, the image will be pulled (downloaded) from the docker registry and stored locally for future containers.
+This script will look for the image iamafk/co3219-assignment-2 locally to create the container. If this cannot be found locally, the image will be pulled (downloaded) from the docker registry and stored locally for future containers.
 
 #### Parameters
 
@@ -46,7 +46,7 @@ The port will be the port you specified in the external port section of the dock
 
 If there any future updates, you can easily update your docker image to run updated containers:
 
-1. Update the image: `docker pull iamafk/co3201-assignment2`
+1. Update the image: `docker pull iamafk/co3219-assignment2`
 2. Stop the running container(s): `docker stop whiteboard`
 3. Delete the container(s): `docker rm whiteboard`
 4. Recreate the container with the newly pulled image using the instructions above
