@@ -1,10 +1,10 @@
-# CO3219 Internet and Cloud Computing Assignment 2
+# Multi-User, Real-Time Collaborative Whiteboard
 
 This is a cloud-based, real-time and collaborative whiteboard allowing multiple users to draw on a canvas which can then be exported.
 
 ## About
 
-Built using Node.js with HTML/CSS/Javascript, and the use of sockets for communication between clients, this software allows multiple users to draw and collaborate on a shared whiteboard.
+Built using Node.js with HTML/CSS/Javascript, this application demonstrates the use of sockets that allows for server-client communication, resulting in a smooth whiteboard experience.
 Clients can connect to the Node.js server using any modern web browser (Chrome/Firefox/Edge etc) through the designated port (8000 by default).
 See the features section for more information about the functionality of the web application.
 
@@ -18,9 +18,8 @@ docker run -d \
   --name=whiteboard \
   -p 8000:8000 \
   --restart unless-stopped \
-  iamafk/co3219-assignment-2
+  iamafk/whiteboard
 ````
-This script will look for the image iamafk/co3219-assignment-2 locally to create the container. If this cannot be found locally, the image will be pulled (downloaded) from the docker registry and stored locally for future containers.
 
 #### Parameters
 
@@ -38,7 +37,7 @@ For example `-p 6500:8000` would expose port 6500 to users whilst the container 
 #### Accessing the Web GUI
 
 To access the whiteboard GUI, you need to use a modern browser, such as Chrome/Firefox/Edge, and browse to `http://ip:port`.
-If you are accessing the whiteboard on the host machine, you can use localhost/127.0.0.1, otherwise you need to find the ip address of the host machine (e.g. 192.168.x.x if local).
+If you are accessing the whiteboard on the host machine, you can use localhost or 127.0.0.1, otherwise you need to find the ip address of the host machine (e.g. 192.168.x.x if local).
 
 The port will be the port you specified in the external port section of the docker run command e.g. `-p 6500:8000` would be accessed in the browser using the port 6500.
 
@@ -46,7 +45,7 @@ The port will be the port you specified in the external port section of the dock
 
 If there any future updates, you can easily update your docker image to run updated containers:
 
-1. Update the image: `docker pull iamafk/co3219-assignment2`
+1. Update the image: `docker pull iamafk/whiteboard`
 2. Stop the running container(s): `docker stop whiteboard`
 3. Delete the container(s): `docker rm whiteboard`
 4. Recreate the container with the newly pulled image using the instructions above
